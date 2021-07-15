@@ -14,6 +14,7 @@ type User struct {
 	Biography  string `json:"biography"`
 	Birthday   string `json:"birthday"`
 	Password   string `json:"-"`
+	PasswordR  string `json:"-"`
 	ProfilePic string `json:"profile_picture"`
 	Points     int32  `json:"points"`
 }
