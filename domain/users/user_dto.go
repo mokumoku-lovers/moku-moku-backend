@@ -38,3 +38,30 @@ func (user *User) EmailValidation() *errors.RestErr {
 
 	return nil
 }
+
+func (user *User) PasswordValidation() *errors.RestErr {
+
+	if user.Password == "" || user.PasswordR == "" {
+		return errors.BadRequest("invalid password")
+	}
+
+	/*
+	*	At least one upper case English Letter, (?=.*?[A-Z])
+	*	At least one lower case English letter, (?=.*?[a-z])
+	*	At least one digit, (?=.*?[0-9])
+	*	No spaces allowed, (?!.* )
+	*	At least one special character, (?=.*?[#?!@$%^&*-])
+	*	Minimum eight in length .{8,} (with the anchors)
+	 */
+	PasswordRegex := regexp.MustCompile(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?!.* )(?=.*?[#?!@$%^&*-]).{8,}$`)
+
+	if !PasswordRegex.MatchString(user.Password) || !PasswordRegex.MatchString(user.PasswordR) {
+		return errors.BadRequest("invalid password")
+	}
+
+	if user.Password != user.PasswordR {
+		return errors.BadRequest("passwords do not match")
+	}
+
+	return nil
+}
