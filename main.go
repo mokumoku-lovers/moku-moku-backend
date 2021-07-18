@@ -1,5 +1,9 @@
 package main
 
-func main() {
+import (
+	"moku-moku/app"
+)
 
+func main() {
+	app.StartApp()
 }
