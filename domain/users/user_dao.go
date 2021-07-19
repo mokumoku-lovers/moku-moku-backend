@@ -27,6 +27,6 @@ func (user *User) Get() *errors.RestErr {
 	user.PasswordR = result.PasswordR
 	user.ProfilePic = result.ProfilePic
 	user.Points = result.Points
-	//hotfix: user.DateCreated = result.DateCreated
+	user.DateCreated = result.DateCreated
 	return nil
 }

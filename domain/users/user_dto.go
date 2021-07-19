@@ -7,17 +7,18 @@ import (
 )
 
 type User struct {
-	Id         int64  `json:"id"`
-	Email      string `json:"email"`
-	Username   string `json:"username"`
-	Name       string `json:"name"`
-	Surname    string `json:"surname"`
-	Biography  string `json:"biography"`
-	Birthday   string `json:"birthday"`
-	Password   string `json:"-"`
-	PasswordR  string `json:"-"`
-	ProfilePic string `json:"profile_picture"`
-	Points     int32  `json:"points"`
+	Id          int64  `json:"id"`
+	Email       string `json:"email"`
+	Username    string `json:"username"`
+	Name        string `json:"name"`
+	Surname     string `json:"surname"`
+	Biography   string `json:"biography"`
+	Birthday    string `json:"birthday"`
+	Password    string `json:"-"`
+	PasswordR   string `json:"-"`
+	ProfilePic  string `json:"profile_picture"`
+	Points      int32  `json:"points"`
+	DateCreated string `json:"date_created"`
 }
 
 func (user *User) EmailValidation() *errors.RestErr {
