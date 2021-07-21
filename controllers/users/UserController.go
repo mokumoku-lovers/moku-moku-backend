@@ -1,6 +1,7 @@
 package users
 
 import (
+	"moku-moku/domain/users"
 	"moku-moku/services"
 	"moku-moku/utils/errors"
 	"net/http"
@@ -22,4 +23,15 @@ func GetUser(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, user)
+}
+
+func CreateUser(c *gin.Context) {
+	var user users.User
+
+	// Parse JSON and map it to User model
+	if err := c.ShouldBindJSON(&user); err != nil {
+		restErr := errors.BadRequest("invalid json body")
+		c.JSON(http.StatusBadRequest, restErr)
+		return
+	}
 }
