@@ -42,4 +42,6 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
+
+	c.JSON(http.StatusOK, createdUser)
 }
