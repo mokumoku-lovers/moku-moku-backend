@@ -34,4 +34,12 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, restErr)
 		return
 	}
+
+	// Create a user
+	createdUser, err := services.CreateUser(user)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
 }
