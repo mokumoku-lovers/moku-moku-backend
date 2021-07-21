@@ -20,4 +20,8 @@ func CreateUser(user users.User) (*users.User, *errors.RestErr) {
 		return nil, err
 	}
 
+	if err := user.PasswordValidation(); err != nil {
+		return nil, err
+	}
+
 }
