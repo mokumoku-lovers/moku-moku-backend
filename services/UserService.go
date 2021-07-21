@@ -24,4 +24,10 @@ func CreateUser(user users.User) (*users.User, *errors.RestErr) {
 		return nil, err
 	}
 
+	// DTO save user to DB
+	if err := user.Save(); err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }
