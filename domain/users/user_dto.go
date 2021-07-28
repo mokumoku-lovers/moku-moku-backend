@@ -10,8 +10,7 @@ type User struct {
 	Id          int64  `json:"id"`
 	Email       string `json:"email"`
 	Username    string `json:"username"`
-	Name        string `json:"name"`
-	Surname     string `json:"surname"`
+	DisplayName string `json:"display_name"`
 	Biography   string `json:"biography"`
 	Birthday    string `json:"birthday"`
 	Password    string `json:"-"`

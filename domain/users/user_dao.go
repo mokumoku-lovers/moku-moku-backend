@@ -19,8 +19,7 @@ func (user *User) Get() *errors.RestErr {
 	user.Id = result.Id
 	user.Email = result.Email
 	user.Username = result.Username
-	user.Name = result.Name
-	user.Surname = result.Surname
+	user.DisplayName = result.DisplayName
 	user.Biography = result.Biography
 	user.Birthday = result.Birthday
 	user.Password = result.Password
