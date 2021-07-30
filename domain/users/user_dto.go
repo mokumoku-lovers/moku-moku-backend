@@ -4,6 +4,7 @@ import (
 	"moku-moku/utils/errors"
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 type User struct {
@@ -46,17 +47,31 @@ func (user *User) PasswordValidation() *errors.RestErr {
 		return errors.BadRequest("invalid password")
 	}
 
-	/*
-	*	At least one upper case English Letter, (?=.*?[A-Z])
-	*	At least one lower case English letter, (?=.*?[a-z])
-	*	At least one digit, (?=.*?[0-9])
-	*	No spaces allowed, (?!.* )
-	*	At least one special character, (?=.*?[#?!@$%^&*-])
-	*	Minimum eight in length .{8,} (with the anchors)
-	 */
-	PasswordRegex := regexp.MustCompile(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?!.* )(?=.*?[#?!@$%^&*-]).{8,}$`)
+	// Go regexp doesn't support Lookaround backtrack
+	number, upper, special, space := false, false, false, false
+	for _, c := range user.Password {
+		switch {
+		case unicode.IsNumber(c):
+			number = true
+		case unicode.IsUpper(c):
+			upper = true
+		case unicode.IsPunct(c) || unicode.IsSymbol(c):
+			special = true
+		case unicode.IsLetter(c):
+		case c == ' ':
+			space = true
+		}
+	}
 
-	if !PasswordRegex.MatchString(user.Password) || !PasswordRegex.MatchString(user.PasswordR) {
+	/*
+	*	At least one upper case English Letter
+	*	At least one lower case English letter
+	*	At least one digit
+	*	No spaces allowed
+	*	At least one special character
+	*	Minimum eight in length
+	 */
+	if !number || !upper || !special || len(user.Password) < 8 || space {
 		return errors.BadRequest("invalid password")
 	}
 
