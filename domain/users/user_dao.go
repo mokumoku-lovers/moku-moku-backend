@@ -36,6 +36,9 @@ func (user *User) Get() *errors.RestErr {
 
 func (user *User) Save() *errors.RestErr {
 	stmt, err := users_db.Client.Prepare(queryInsertUser)
+	if err != nil {
+		return errors.InternalServerError(err.Error())
+	}
 
 	defer stmt.Close()
 
