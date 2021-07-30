@@ -33,3 +33,11 @@ func InternalServerError(message string) *RestErr {
 		Error:   "internal_server_error",
 	}
 }
+
+func UniqueConstraintViolation(message string) *RestErr {
+	return &RestErr{
+		Message: message,
+		Status:  http.StatusUnprocessableEntity,
+		Error:   "unprocessable_entity",
+	}
+}
