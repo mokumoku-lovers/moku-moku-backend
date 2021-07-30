@@ -2,6 +2,8 @@ package users
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"moku-moku/datasources/postgresql/users_db"
 	"moku-moku/utils/date_utils"
@@ -41,7 +43,10 @@ func (user *User) Save() *errors.RestErr {
 	var err error
 
 	user.DateCreated = date_utils.GetNowString()
-	// TODO: Encrypt password with SHA algorithm
+
+	// Encrypts the password with SHA256
+	hashedPassword := sha256.Sum256([]byte(user.Password))
+	user.Password = hex.EncodeToString(hashedPassword[:])
 
 	// TODO: Failed queries increments users ID!!
 	stmt := users_db.Client.QueryRow(context.Background(), queryInsertUser,
