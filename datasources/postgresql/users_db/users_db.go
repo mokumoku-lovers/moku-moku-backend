@@ -2,7 +2,6 @@ package users_db
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"log"
@@ -19,8 +18,7 @@ const (
 )
 
 var (
-	Client *sql.DB
-
+	Client   *pgxpool.Pool
 	username string
 	password string
 	host     string
@@ -37,6 +35,7 @@ func loadEnvironment() {
 }
 
 func init() {
+	var err error
 	loadEnvironment()
 
 	username = os.Getenv(pgUsername)
@@ -48,7 +47,7 @@ func init() {
 		username, password, host, schema,
 	)
 
-	Client, err := pgxpool.Connect(context.Background(), dataSourceName)
+	Client, err = pgxpool.Connect(context.Background(), dataSourceName)
 
 	if err != nil {
 		panic(err)
