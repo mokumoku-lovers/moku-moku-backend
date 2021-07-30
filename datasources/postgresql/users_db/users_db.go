@@ -1,8 +1,10 @@
 package users_db
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"log"
 	"os"
 
@@ -35,8 +37,6 @@ func loadEnvironment() {
 }
 
 func init() {
-	//var err error
-
 	loadEnvironment()
 
 	username = os.Getenv(pgUsername)
@@ -44,7 +44,19 @@ func init() {
 	host = os.Getenv(pgHost)
 	schema = os.Getenv(pgSchema)
 
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
+	dataSourceName := fmt.Sprintf("postgres://%s:%s@%s/%s",
 		username, password, host, schema,
 	)
+
+	Client, err := pgxpool.Connect(context.Background(), dataSourceName)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if err = Client.Ping(context.Background()); err != nil {
+		panic(err)
+	}
+
+	log.Println("Database successfully set up")
 }
