@@ -11,7 +11,7 @@ import (
 
 //User Data Access Object
 const (
-	queryInsertUser = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);"
+	queryInsertUser = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;"
 )
 
 var (
@@ -44,14 +44,13 @@ func (user *User) Save() *errors.RestErr {
 	// TODO: Encrypt password with SHA algorithm
 
 	// TODO: Failed queries increments users ID!!
-	_, err = users_db.Client.Exec(context.Background(), queryInsertUser,
+	stmt := users_db.Client.QueryRow(context.Background(), queryInsertUser,
 		user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, 0, user.DateCreated)
 
+	err = stmt.Scan(&user.Id)
 	if err != nil {
 		return pg_utils.ParseError(err, "error when trying to save user")
 	}
-
-	//user.Id = userId
 
 	return nil
 }
