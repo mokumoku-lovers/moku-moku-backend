@@ -9,6 +9,8 @@ import (
 	"moku-moku/utils/date_utils"
 	"moku-moku/utils/errors"
 	"moku-moku/utils/pg_utils"
+	"strings"
+	"time"
 )
 
 //User Data Access Object
@@ -42,7 +44,13 @@ func (user *User) Get() *errors.RestErr {
 func (user *User) Save() *errors.RestErr {
 	var err error
 
+	// Dates
 	user.DateCreated = date_utils.GetNowString()
+	var birthday time.Time
+	birthday, err = time.Parse(date_utils.DateFormat, user.Birthday)
+	if err == nil {
+		user.Birthday = strings.Fields(birthday.String())[0]
+	}
 
 	// Encrypts the password with SHA256
 	hashedPassword := sha256.Sum256([]byte(user.Password))
@@ -50,7 +58,7 @@ func (user *User) Save() *errors.RestErr {
 
 	// TODO: Failed queries increments users ID!!
 	stmt := users_db.Client.QueryRow(context.Background(), queryInsertUser,
-		user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, 0, user.DateCreated)
+		user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Password, user.ProfilePic, 0, user.DateCreated)
 
 	err = stmt.Scan(&user.Id)
 	if err != nil {

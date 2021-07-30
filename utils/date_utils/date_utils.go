@@ -3,7 +3,8 @@ package date_utils
 import "time"
 
 const (
-	dateFormat = "2006-01-02 15:04:05"
+	TimeStamp  = "2006-01-02 15:04:05"
+	DateFormat = "2006-01-02"
 )
 
 func GetNow() time.Time {
@@ -11,5 +12,5 @@ func GetNow() time.Time {
 }
 
 func GetNowString() string {
-	return GetNow().Format(dateFormat)
+	return GetNow().Format(TimeStamp)
 }
