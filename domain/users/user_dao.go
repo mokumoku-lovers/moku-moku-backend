@@ -1,14 +1,17 @@
 package users
 
 import (
+	"context"
 	"fmt"
 	"moku-moku/datasources/postgresql/users_db"
+	"moku-moku/utils/date_utils"
 	"moku-moku/utils/errors"
+	"moku-moku/utils/pg_utils"
 )
 
 //User Data Access Object
 const (
-	queryInsertUser = "INSERT INTO users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES (?,?,?,?,?,?,?,?,?)"
+	queryInsertUser = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);"
 )
 
 var (
@@ -35,12 +38,20 @@ func (user *User) Get() *errors.RestErr {
 }
 
 func (user *User) Save() *errors.RestErr {
-	stmt, err := users_db.Client.Prepare(queryInsertUser)
+	var err error
+
+	user.DateCreated = date_utils.GetNowString()
+	// TODO: Encrypt password with SHA algorithm
+
+	// TODO: Failed queries increments users ID!!
+	_, err = users_db.Client.Exec(context.Background(), queryInsertUser,
+		user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, 0, user.DateCreated)
+
 	if err != nil {
-		return errors.InternalServerError(err.Error())
+		return pg_utils.ParseError(err, "error when trying to save user")
 	}
 
-	defer stmt.Close()
+	//user.Id = userId
 
 	return nil
 }
