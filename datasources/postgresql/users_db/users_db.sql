@@ -12,9 +12,9 @@ CREATE TABLE Users (
    username        VARCHAR(50) NOT NULL UNIQUE,
    display_name    VARCHAR(255),
    biography       TEXT,
-   birthday        TIMESTAMP,
+   birthday        DATE,
    password        VARCHAR(255),
    profile_pic     VARCHAR(255),
    points          INTEGER,
-   date_created    TIMESTAMP
+   date_created    DATE
 );
