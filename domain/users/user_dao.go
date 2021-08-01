@@ -58,7 +58,7 @@ func (user *User) Save() *errors.RestErr {
 
 	// TODO: Failed queries increments users ID!!
 	stmt := users_db.Client.QueryRow(context.Background(), queryInsertUser,
-		user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Password, user.ProfilePic, 0, user.DateCreated)
+		user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, 0, user.DateCreated)
 
 	err = stmt.Scan(&user.Id)
 	if err != nil {
