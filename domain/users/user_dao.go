@@ -68,3 +68,15 @@ func (user *User) Save() *errors.RestErr {
 
 	return nil
 }
+
+func (user *User) Delete() *errors.RestErr {
+	stmt, err := users_db.Client.Exec(context.Background(), queryDeleteUser, user.Id)
+	if err != nil {
+		return pg_utils.ParseError(err, "error when trying to delete user")
+	}
+	if stmt.RowsAffected() != 1 {
+		return errors.NotFoundError("user does not exist")
+	}
+
+	return nil
+}
