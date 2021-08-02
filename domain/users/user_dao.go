@@ -16,6 +16,7 @@ import (
 //User Data Access Object
 const (
 	queryInsertUser = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;"
+	queryDeleteUser = "DELETE FROM user_db.users WHERE id = $1;"
 )
 
 var (
