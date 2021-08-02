@@ -16,6 +16,7 @@ import (
 //User Data Access Object
 const (
 	queryInsertUser = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;"
+	queryDeleteUser = "DELETE FROM user_db.users WHERE id = $1;"
 )
 
 var (
@@ -63,6 +64,18 @@ func (user *User) Save() *errors.RestErr {
 	err = stmt.Scan(&user.Id)
 	if err != nil {
 		return pg_utils.ParseError(err, "error when trying to save user")
+	}
+
+	return nil
+}
+
+func (user *User) Delete() *errors.RestErr {
+	stmt, err := users_db.Client.Exec(context.Background(), queryDeleteUser, user.Id)
+	if err != nil {
+		return pg_utils.ParseError(err, "error when trying to delete user")
+	}
+	if stmt.RowsAffected() != 1 {
+		return errors.NotFoundError("user does not exist")
 	}
 
 	return nil

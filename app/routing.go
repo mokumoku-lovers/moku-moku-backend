@@ -7,4 +7,5 @@ import (
 func addRoutes() {
 	router.GET("/users/:user_id", users.GetUser)
 	router.POST("/users", users.CreateUser)
+	router.DELETE("/users/:user_id", users.DeleteUser)
 }

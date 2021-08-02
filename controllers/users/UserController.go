@@ -45,3 +45,17 @@ func CreateUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, createdUser)
 }
+
+func DeleteUser(c *gin.Context) {
+	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
+	if userErr != nil {
+		err := errors.BadRequest("user id should be a number")
+		c.JSON(err.Status, err)
+		return
+	}
+	if err := services.DeleteUser(userId); err != nil {
+		c.JSON(err.Status, err)
+		return
+	}
+	c.JSON(http.StatusOK, map[string]string{"status": "deleted"})
+}
