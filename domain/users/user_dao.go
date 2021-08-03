@@ -84,10 +84,9 @@ func (user *User) Delete() *errors.RestErr {
 
 func (user *User) Update() *errors.RestErr {
 	// Parse Birthday
-	birthday, err := time.Parse(date_utils.DateFormat, user.Birthday)
-	if err == nil {
-		user.Birthday = strings.Fields(birthday.String())[0]
-	}
+	// TODO: user.Birthday for illegal or empty value is parsed to "0001-01-01" instead of nil since a string cannot be nil
+	birthday, _ := time.Parse(date_utils.DateFormat, user.Birthday)
+	user.Birthday = strings.Fields(birthday.String())[0]
 
 	// Encrypts the password with SHA256
 	hashedPassword := sha256.Sum256([]byte(user.Password))
