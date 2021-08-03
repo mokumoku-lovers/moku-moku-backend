@@ -59,3 +59,30 @@ func DeleteUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, map[string]string{"status": "deleted"})
 }
+
+func UpdateUser(c *gin.Context) {
+	// Parse userId
+	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
+	if userErr != nil {
+		err := errors.BadRequest("user id should be a number")
+		c.JSON(err.Status, err)
+		return
+	}
+
+	// Parse JSON and map it to User model
+	var user users.User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		restErr := errors.BadRequest("invalid json body")
+		c.JSON(http.StatusBadRequest, restErr)
+		return
+	}
+
+	// Update user
+	updatedUser, err := services.UpdateUser(userId, user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, updatedUser)
+}
