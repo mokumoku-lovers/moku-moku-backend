@@ -32,17 +32,8 @@ func (user *User) Get() *errors.RestErr {
 	if err != nil {
 		return pg_utils.ParseError(err, "error when trying to get user")
 	}
-	user.Id = result.Id
-	user.Email = result.Email
-	user.Username = result.Username
-	user.DisplayName = result.DisplayName
-	user.Biography = result.Biography
-	user.Birthday = result.Birthday
-	user.Password = result.Password
-	user.PasswordR = result.PasswordR
-	user.ProfilePic = result.ProfilePic
-	user.Points = result.Points
-	user.DateCreated = result.DateCreated
+	*user = *users[0]
+	//TODO: map birthday and date_created (type date) to user model as string and return
 	return nil
 }
 
