@@ -26,9 +26,9 @@ var (
 )
 
 func (user *User) Get() *errors.RestErr {
-	result := usersDB[user.Id]
-	if result == nil {
-		return errors.NotFoundError(fmt.Sprintf("user %d not found", user.Id))
+	//err := users_db.Client.QueryRow(context.Background(), queryGetUser, user.Id).Scan(&user.Id, &user.Email, &user.Username, &user.DisplayName, &user.Biography, &user.Birthday, &user.Password, &user.ProfilePic, &user.Points, &user.DateCreated)
+	var users []*User
+	err := pgxscan.Select(context.Background(), users_db.Client, &users, queryGetUser, user.Id)
 	}
 	user.Id = result.Id
 	user.Email = result.Email
