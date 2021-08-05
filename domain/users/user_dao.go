@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
+	"github.com/georgysavva/scany/pgxscan"
 	"moku-moku/datasources/postgresql/users_db"
 	"moku-moku/utils/date_utils"
 	"moku-moku/utils/errors"
