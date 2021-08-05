@@ -16,6 +16,7 @@ import (
 //User Data Access Object
 const (
 	queryInsertUser = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;"
+	queryGetUser    = "SELECT id, email, username, display_name, biography, to_char(birthday, 'YYYY-MM-DD'), password, profile_pic, points, to_char(date_created, 'YYYY-MM-DD') FROM user_db.users WHERE id =$1;"
 	queryDeleteUser = "DELETE FROM user_db.users WHERE id = $1;"
 	queryUpdateUser = "UPDATE user_db.users SET email=$2, username=$3, display_name=$4, biography=$5, birthday=$6, password=$7, profile_pic=$8, points=$9 WHERE id=$1;"
 )
