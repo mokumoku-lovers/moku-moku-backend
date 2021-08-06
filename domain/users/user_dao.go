@@ -4,13 +4,14 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"github.com/georgysavva/scany/pgxscan"
 	"moku-moku/datasources/postgresql/users_db"
 	"moku-moku/utils/date_utils"
 	"moku-moku/utils/errors"
 	"moku-moku/utils/pg_utils"
 	"strings"
 	"time"
+
+	"github.com/georgysavva/scany/pgxscan"
 )
 
 //User Data Access Object
