@@ -4,42 +4,32 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"moku-moku/datasources/postgresql/users_db"
 	"moku-moku/utils/date_utils"
 	"moku-moku/utils/errors"
 	"moku-moku/utils/pg_utils"
 	"strings"
 	"time"
+
+	"github.com/georgysavva/scany/pgxscan"
 )
 
 //User Data Access Object
 const (
 	queryInsertUser = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;"
+	queryGetUser    = "SELECT id, email, username, display_name, biography, to_char(birthday, 'YYYY-MM-DD') AS birthday, password, profile_pic, points, to_char(date_created, 'YYYY-MM-DD') AS date_created FROM user_db.users WHERE id =$1;"
 	queryDeleteUser = "DELETE FROM user_db.users WHERE id = $1;"
 	queryUpdateUser = "UPDATE user_db.users SET email=$2, username=$3, display_name=$4, biography=$5, birthday=$6, password=$7, profile_pic=$8, points=$9 WHERE id=$1;"
 )
 
-var (
-	usersDB = make(map[int64]*User)
-)
-
 func (user *User) Get() *errors.RestErr {
-	result := usersDB[user.Id]
-	if result == nil {
-		return errors.NotFoundError(fmt.Sprintf("user %d not found", user.Id))
+	//err := users_db.Client.QueryRow(context.Background(), queryGetUser, user.Id).Scan(&user.Id, &user.Email, &user.Username, &user.DisplayName, &user.Biography, &user.Birthday, &user.Password, &user.ProfilePic, &user.Points, &user.DateCreated)
+	var users []*User
+	err := pgxscan.Select(context.Background(), users_db.Client, &users, queryGetUser, user.Id)
+	if err != nil {
+		return pg_utils.ParseError(err, "error when trying to get user")
 	}
-	user.Id = result.Id
-	user.Email = result.Email
-	user.Username = result.Username
-	user.DisplayName = result.DisplayName
-	user.Biography = result.Biography
-	user.Birthday = result.Birthday
-	user.Password = result.Password
-	user.PasswordR = result.PasswordR
-	user.ProfilePic = result.ProfilePic
-	user.Points = result.Points
-	user.DateCreated = result.DateCreated
+	*user = *users[0]
 	return nil
 }
 
