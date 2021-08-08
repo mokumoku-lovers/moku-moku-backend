@@ -79,9 +79,16 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 	// Call middleware to sanitize and check if the fields are correct
 	if err := user.EmailValidation(); err != nil {
 		return nil, err
+		} else {
+			current.Email = user.Email
+			current.Username = user.Username
+			current.DisplayName = user.DisplayName
+			current.Biography = user.Biography
+			current.Birthday = user.Birthday
+			current.Password = user.Password
+			//Fix: password validation requires PasswordR
+			current.ProfilePic = user.ProfilePic
 	}
-	if err := user.PasswordValidation(); err != nil {
-		return nil, err
 	}
 
 	// DTO save user to DB
