@@ -38,6 +38,11 @@ func DeleteUser(userId int64) *errors.RestErr {
 }
 
 func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestErr) {
+	//Get user from db
+	current, err := GetUser(user.Id)
+	if err != nil {
+		return nil, err
+	}
 
 	// Call middleware to sanitize and check if the fields are correct
 	if err := user.EmailValidation(); err != nil {
