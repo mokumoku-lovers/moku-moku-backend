@@ -81,6 +81,7 @@ func (user *User) Update() *errors.RestErr {
 	}
 
 	// Encrypts the password with SHA256
+	// TODO: If password is not changed do not re-hash the hash
 	hashedPassword := sha256.Sum256([]byte(user.Password))
 	user.Password = hex.EncodeToString(hashedPassword[:])
 
