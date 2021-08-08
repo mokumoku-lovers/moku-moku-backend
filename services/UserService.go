@@ -72,6 +72,8 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 		if user.ProfilePic != "" {
 			current.ProfilePic = user.ProfilePic
 		}
+		if user.Points != 0 { //Fix: check for zero points or check pointer null
+			current.Points = user.Points
 		}
 	} else { //fullUpdate, update all to info in current user
 	// Call middleware to sanitize and check if the fields are correct
