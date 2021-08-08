@@ -77,8 +77,13 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	user.Id = userId
+
+	//Check if patch request
+	partialUpdate := c.Request.Method == http.MethodPatch
+
 	// Update user
-	updatedUser, err := services.UpdateUser(userId, user)
+	updatedUser, err := services.UpdateUser(partialUpdate, user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return

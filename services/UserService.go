@@ -37,23 +37,65 @@ func DeleteUser(userId int64) *errors.RestErr {
 	return user.Delete()
 }
 
-func UpdateUser(userId int64, user users.User) (*users.User, *errors.RestErr) {
-	user.Id = userId
-
-	// Call middleware to sanitize and check if the fields are correct
-	if err := user.EmailValidation(); err != nil {
+func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestErr) {
+	//Get user from db
+	current, err := GetUser(user.Id)
+	if err != nil {
 		return nil, err
 	}
-	if err := user.PasswordValidation(); err != nil {
-		return nil, err
+
+	//if partialUpdate, verify all fields to find what must be updated
+	if partialUpdate {
+		if user.Email != "" {
+			if err := user.EmailValidation(); err != nil {
+				return nil, err
+			} else {
+				current.Email = user.Email
+			}
+		}
+		if user.Username != "" {
+			current.Username = user.Username
+		}
+		if user.DisplayName != "" {
+			current.DisplayName = user.DisplayName
+		}
+		if user.Biography != "" {
+			current.Biography = user.Biography
+		}
+		if user.Birthday != "" {
+			current.Birthday = user.Birthday
+		}
+		if user.Password != "" {
+			//Fix: password validation requires PasswordR
+			current.Password = user.Password
+		}
+		if user.ProfilePic != "" {
+			current.ProfilePic = user.ProfilePic
+		}
+		if user.Points != 0 { //Fix: check for zero points or check pointer null
+			current.Points = user.Points
+		}
+	} else { //fullUpdate, update all to info in current user
+		// Call middleware to sanitize and check if the fields are correct
+		if err := user.EmailValidation(); err != nil {
+			return nil, err
+		} else {
+			current.Email = user.Email
+			current.Username = user.Username
+			current.DisplayName = user.DisplayName
+			current.Biography = user.Biography
+			current.Birthday = user.Birthday
+			current.Password = user.Password
+			//Fix: password validation requires PasswordR
+			current.ProfilePic = user.ProfilePic
+		}
 	}
 
 	// DTO save user to DB
-	if err := user.Update(); err != nil {
+	if err := current.Update(); err != nil {
 		return nil, err
 	}
 
-	return &user, nil
-
+	return current, nil
 
 }
