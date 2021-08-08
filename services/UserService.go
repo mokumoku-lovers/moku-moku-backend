@@ -44,6 +44,10 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 		return nil, err
 	}
 
+	//if partialUpdate, verify all fields to find what must be updated
+	if partialUpdate {
+		}
+	} else { //fullUpdate, update all to info in current user
 	// Call middleware to sanitize and check if the fields are correct
 	if err := user.EmailValidation(); err != nil {
 		return nil, err
