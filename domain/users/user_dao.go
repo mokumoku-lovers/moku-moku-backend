@@ -75,15 +75,23 @@ func (user *User) Delete() *errors.RestErr {
 
 func (user *User) Update() *errors.RestErr {
 	// Parse Birthday
-	// TODO: user.Birthday for illegal or empty value is parsed to "0001-01-01" instead of nil since a string cannot be nil
-	birthday, _ := time.Parse(date_utils.DateFormat, user.Birthday)
-	user.Birthday = strings.Fields(birthday.String())[0]
+	if user.Birthday != "" {
+		birthday, _ := time.Parse(date_utils.DateFormat, user.Birthday)
+		user.Birthday = strings.Fields(birthday.String())[0]
+	}
 
 	// Encrypts the password with SHA256
 	hashedPassword := sha256.Sum256([]byte(user.Password))
 	user.Password = hex.EncodeToString(hashedPassword[:])
 
-	stmt, err := users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Password, user.ProfilePic, user.Points)
+	var stmt pgconn.CommandTag
+	var err error
+	if user.Birthday != "" {
+		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Password, user.ProfilePic, user.Points)
+	} else {
+		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, user.Points)
+	}
+
 	if err != nil {
 		return pg_utils.ParseError(err, "error when trying to update user")
 	}
