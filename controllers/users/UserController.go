@@ -77,6 +77,8 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	user.Id = userId
+
 	//Check if patch request
 	partialUpdate := c.Request.Method == http.MethodPatch
 
