@@ -37,8 +37,7 @@ func DeleteUser(userId int64) *errors.RestErr {
 	return user.Delete()
 }
 
-func UpdateUser(userId int64, user users.User) (*users.User, *errors.RestErr) {
-	user.Id = userId
+func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestErr) {
 
 	// Call middleware to sanitize and check if the fields are correct
 	if err := user.EmailValidation(); err != nil {
