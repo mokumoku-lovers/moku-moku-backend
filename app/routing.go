@@ -10,4 +10,5 @@ func addRoutes() {
 	router.DELETE("/users/:user_id", users.DeleteUser)
 	router.PUT("/users/:user_id", users.UpdateUser)
 	router.PATCH("/users/:user_id", users.UpdateUser)
+	router.PATCH("/users/:user_id/points/:user_points", users.UpdateUserPoints)
 }
