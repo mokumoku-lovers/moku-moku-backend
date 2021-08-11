@@ -43,10 +43,9 @@ func (user *User) Save() *errors.RestErr {
 	var birthday time.Time
 	if user.Birthday != "" {
 		birthday, err = time.Parse(date_utils.DateFormat, user.Birthday)
-	}
-
-	if err == nil {
-		user.Birthday = strings.Fields(birthday.String())[0]
+		if err == nil {
+			user.Birthday = strings.Fields(birthday.String())[0]
+		}
 	}
 
 	// Encrypts the password with SHA256
