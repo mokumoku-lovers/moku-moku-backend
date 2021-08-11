@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 	"moku-moku/datasources/postgresql/users_db"
 	"moku-moku/utils/date_utils"
 	"moku-moku/utils/errors"
@@ -40,7 +41,10 @@ func (user *User) Save() *errors.RestErr {
 	// Dates
 	user.DateCreated = date_utils.GetNowString()
 	var birthday time.Time
-	birthday, err = time.Parse(date_utils.DateFormat, user.Birthday)
+	if user.Birthday != "" {
+		birthday, err = time.Parse(date_utils.DateFormat, user.Birthday)
+	}
+
 	if err == nil {
 		user.Birthday = strings.Fields(birthday.String())[0]
 	}
@@ -50,8 +54,14 @@ func (user *User) Save() *errors.RestErr {
 	user.Password = hex.EncodeToString(hashedPassword[:])
 
 	// TODO: Failed queries increments users ID!!
-	stmt := users_db.Client.QueryRow(context.Background(), queryInsertUser,
-		user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, 0, user.DateCreated)
+	var stmt pgx.Row
+	if user.Birthday != "" {
+		stmt = users_db.Client.QueryRow(context.Background(), queryInsertUser,
+			user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Password, user.ProfilePic, 0, user.DateCreated)
+	} else {
+		stmt = users_db.Client.QueryRow(context.Background(), queryInsertUser,
+			user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, 0, user.DateCreated)
+	}
 
 	err = stmt.Scan(&user.Id)
 	if err != nil {
