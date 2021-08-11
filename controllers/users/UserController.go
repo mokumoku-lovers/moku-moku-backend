@@ -91,3 +91,33 @@ func UpdateUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, updatedUser)
 }
+
+func UpdateUserPoints(c *gin.Context) {
+	// Parse userId & userPoints
+	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
+	if userErr != nil {
+		err := errors.BadRequest("user id should be a number")
+		c.JSON(err.Status, err)
+		return
+	}
+	userPoints, pointErr := strconv.ParseInt(c.Param("user_points"), 10, 64)
+	if pointErr != nil {
+		err := errors.BadRequest("user_points should be a number")
+		c.JSON(err.Status, err)
+		return
+	}
+
+	// Parse JSON and map it to User model
+	var user users.User
+	user.Id = userId
+	user.Points = int32(userPoints)
+
+	// Update user
+	updatedUser, err := services.UpdateUser(true, user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, updatedUser)
+}
