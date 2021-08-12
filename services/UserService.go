@@ -109,4 +109,13 @@ func UpdatePassword(user users.User) (*users.User, *errors.RestErr) {
 	if err := user.PasswordValidation(); err != nil {
 		return nil, err
 	}
+
+	oldPassword := user.OldPassword
+	newPassword := user.Password
+
+	if err := current.UpdatePassword(oldPassword, newPassword); err != nil {
+		return nil, err
+	}
+
+	return current, nil
 }
