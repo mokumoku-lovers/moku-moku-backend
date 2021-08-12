@@ -22,7 +22,7 @@ func GetUser(c *gin.Context) {
 		c.JSON(getErr.Status, getErr)
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, user.Marshall(c.GetHeader("X-Public") == "true"))
 }
 
 func CreateUser(c *gin.Context) {
