@@ -18,6 +18,7 @@ import (
 
 //User Data Access Object
 const (
+	queryUpdateUser     = "UPDATE user_db.users SET email=$2, username=$3, display_name=$4, biography=$5, birthday=$6, profile_pic=$7, points=$8 WHERE id=$1;"
 	queryUpdatePassword = "UPDATE user_db.users SET password=$2 WHERE id=$1;"
 )
 
@@ -94,9 +95,9 @@ func (user *User) Update() *errors.RestErr {
 	var stmt pgconn.CommandTag
 	var err error
 	if user.Birthday != "" {
-		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Password, user.ProfilePic, user.Points)
+		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.ProfilePic, user.Points)
 	} else {
-		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, user.Points)
+		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, nil, user.ProfilePic, user.Points)
 	}
 
 	if err != nil {
