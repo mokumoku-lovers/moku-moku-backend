@@ -123,4 +123,11 @@ func UpdateUserPoints(c *gin.Context) {
 }
 
 func UpdateUserPassword(c *gin.Context) {
+	//Parse userId
+	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
+	if userErr != nil {
+		err := errors.BadRequest("user id should be a number")
+		c.JSON(err.Status, err)
+		return
+	}
 }
