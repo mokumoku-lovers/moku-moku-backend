@@ -139,4 +139,11 @@ func UpdateUserPassword(c *gin.Context) {
 	}
 	user.Id = userId
 
+	//Update password
+	updatedPassword, err := services.UpdatePassword(user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, updatedPassword)
 }
