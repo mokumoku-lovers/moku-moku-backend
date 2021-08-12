@@ -121,4 +121,12 @@ func (current *User) UpdatePassword(oldPassword string, newPassword string) *err
 	if !verifiedPassword {
 		return errors.BadRequest("old password is incorrect")
 	}
+
+	current.Password = newPassword
+
+	// Encrypts the password with SHA256
+	// TODO: If password is not changed do not re-hash the hash
+	hashedPassword := sha256.Sum256([]byte(current.Password))
+	current.Password = hex.EncodeToString(hashedPassword[:])
+
 }
