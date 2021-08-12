@@ -129,4 +129,15 @@ func (current *User) UpdatePassword(oldPassword string, newPassword string) *err
 	hashedPassword := sha256.Sum256([]byte(current.Password))
 	current.Password = hex.EncodeToString(hashedPassword[:])
 
+	var stmt pgconn.CommandTag
+	var err error
+	//update password in db
+	stmt, err = users_db.Client.Exec(context.Background(), queryUpdatePassword, current.Id, current.Password)
+	if err != nil {
+		return pg_utils.ParseError(err, "error when trying to update password")
+	}
+	if stmt.RowsAffected() != 1 {
+		return errors.NotFoundError("user does not exist")
+	}
+	return nil
 }
