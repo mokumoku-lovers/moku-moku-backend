@@ -108,3 +108,6 @@ func (user *User) Update() *errors.RestErr {
 
 	return nil
 }
+
+func (current *User) UpdatePassword(oldPassword string, newPassword string) *errors.RestErr {
+}
