@@ -121,3 +121,6 @@ func UpdateUserPoints(c *gin.Context) {
 
 	c.JSON(http.StatusOK, updatedUser)
 }
+
+func UpdateUserPassword(c *gin.Context) {
+}
