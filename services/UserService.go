@@ -101,4 +101,8 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 }
 
 func UpdatePassword(user users.User) (*users.User, *errors.RestErr) {
+	current, err := GetUser(user.Id)
+	if err != nil {
+		return nil, err
+	}
 }
