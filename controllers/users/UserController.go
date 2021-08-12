@@ -130,4 +130,13 @@ func UpdateUserPassword(c *gin.Context) {
 		c.JSON(err.Status, err)
 		return
 	}
+	//Parse JSON and map it to User model
+	var user users.User
+	if err := c.ShouldBind(&user); err != nil {
+		restErr := errors.BadRequest("invalid json body")
+		c.JSON(http.StatusBadRequest, restErr)
+		return
+	}
+	user.Id = userId
+
 }
