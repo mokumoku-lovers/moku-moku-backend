@@ -110,4 +110,15 @@ func (user *User) Update() *errors.RestErr {
 }
 
 func (current *User) UpdatePassword(oldPassword string, newPassword string) *errors.RestErr {
+	// Hash given old password
+	// Encrypts the password with SHA256
+	hashedOldPassword := sha256.Sum256([]byte(oldPassword))
+	oldPassword = hex.EncodeToString(hashedOldPassword[:])
+
+	//Check given old password matches current DB password
+	verifiedPassword := oldPassword == current.Password
+
+	if !verifiedPassword {
+		return errors.BadRequest("old password is incorrect")
+	}
 }
