@@ -99,3 +99,6 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 	return current, nil
 
 }
+
+func UpdatePassword(user users.User) (*users.User, *errors.RestErr) {
+}
