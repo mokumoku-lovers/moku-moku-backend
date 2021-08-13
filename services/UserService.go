@@ -65,10 +65,6 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 		if user.Birthday != "" {
 			current.Birthday = user.Birthday
 		}
-		if user.Password != "" {
-			//Fix: password validation requires PasswordR
-			current.Password = user.Password
-		}
 		if user.ProfilePic != "" {
 			current.ProfilePic = user.ProfilePic
 		}
@@ -85,8 +81,6 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 			current.DisplayName = user.DisplayName
 			current.Biography = user.Biography
 			current.Birthday = user.Birthday
-			current.Password = user.Password
-			//Fix: password validation requires PasswordR
 			current.ProfilePic = user.ProfilePic
 		}
 	}
@@ -98,4 +92,24 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 
 	return current, nil
 
+}
+
+func UpdatePassword(user users.User) (*users.User, *errors.RestErr) {
+	current, err := GetUser(user.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := user.PasswordValidation(); err != nil {
+		return nil, err
+	}
+
+	oldPassword := user.OldPassword
+	newPassword := user.Password
+
+	if err := current.UpdatePassword(oldPassword, newPassword); err != nil {
+		return nil, err
+	}
+
+	return current, nil
 }

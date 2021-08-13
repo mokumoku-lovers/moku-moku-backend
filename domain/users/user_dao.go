@@ -18,10 +18,11 @@ import (
 
 //User Data Access Object
 const (
-	queryInsertUser = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;"
-	queryGetUser    = "SELECT id, email, username, display_name, biography, COALESCE(to_char(birthday, 'YYYY-MM-DD'), '') AS birthday, password, profile_pic, points, to_char(date_created, 'YYYY-MM-DD') AS date_created FROM user_db.users WHERE id =$1;"
-	queryDeleteUser = "DELETE FROM user_db.users WHERE id = $1;"
-	queryUpdateUser = "UPDATE user_db.users SET email=$2, username=$3, display_name=$4, biography=$5, birthday=$6, password=$7, profile_pic=$8, points=$9 WHERE id=$1;"
+	queryInsertUser     = "INSERT INTO user_db.users(email, username, display_name, biography, birthday, password, profile_pic, points, date_created) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;"
+	queryGetUser        = "SELECT id, email, username, display_name, biography, COALESCE(to_char(birthday, 'YYYY-MM-DD'), '') AS birthday, password, profile_pic, points, to_char(date_created, 'YYYY-MM-DD') AS date_created FROM user_db.users WHERE id =$1;"
+	queryDeleteUser     = "DELETE FROM user_db.users WHERE id = $1;"
+	queryUpdateUser     = "UPDATE user_db.users SET email=$2, username=$3, display_name=$4, biography=$5, birthday=$6, profile_pic=$7, points=$8 WHERE id=$1;"
+	queryUpdatePassword = "UPDATE user_db.users SET password=$2 WHERE id=$1;"
 )
 
 func (user *User) Get() *errors.RestErr {
@@ -97,9 +98,9 @@ func (user *User) Update() *errors.RestErr {
 	var stmt pgconn.CommandTag
 	var err error
 	if user.Birthday != "" {
-		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Password, user.ProfilePic, user.Points)
+		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.ProfilePic, user.Points)
 	} else {
-		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, user.Points)
+		stmt, err = users_db.Client.Exec(context.Background(), queryUpdateUser, user.Id, user.Email, user.Username, user.DisplayName, user.Biography, nil, user.ProfilePic, user.Points)
 	}
 
 	if err != nil {
@@ -109,5 +110,38 @@ func (user *User) Update() *errors.RestErr {
 		return errors.NotFoundError("user does not exist")
 	}
 
+	return nil
+}
+
+func (current *User) UpdatePassword(oldPassword string, newPassword string) *errors.RestErr {
+	// Hash given old password
+	// Encrypts the password with SHA256
+	hashedOldPassword := sha256.Sum256([]byte(oldPassword))
+	oldPassword = hex.EncodeToString(hashedOldPassword[:])
+
+	//Check given old password matches current DB password
+	verifiedPassword := oldPassword == current.Password
+
+	if !verifiedPassword {
+		return errors.BadRequest("old password is incorrect")
+	}
+
+	current.Password = newPassword
+
+	// Encrypts the password with SHA256
+	// TODO: If password is not changed do not re-hash the hash
+	hashedPassword := sha256.Sum256([]byte(current.Password))
+	current.Password = hex.EncodeToString(hashedPassword[:])
+
+	var stmt pgconn.CommandTag
+	var err error
+	//update password in db
+	stmt, err = users_db.Client.Exec(context.Background(), queryUpdatePassword, current.Id, current.Password)
+	if err != nil {
+		return pg_utils.ParseError(err, "error when trying to update password")
+	}
+	if stmt.RowsAffected() != 1 {
+		return errors.NotFoundError("user does not exist")
+	}
 	return nil
 }
