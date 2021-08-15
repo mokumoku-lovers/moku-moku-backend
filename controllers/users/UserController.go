@@ -43,7 +43,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, createdUser)
+	c.JSON(http.StatusOK, createdUser.Marshall(c.GetHeader("X-Public") == "true"))
 }
 
 func DeleteUser(c *gin.Context) {
