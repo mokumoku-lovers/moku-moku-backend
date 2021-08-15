@@ -24,7 +24,16 @@ type PrivateUser struct {
 }
 
 func (user *User) Marshall(isPublic bool) interface{} {
-	//TODO: PublicUser marshalling
+	if isPublic {
+		return PublicUser{
+			Id:          user.Id,
+			DisplayName: user.DisplayName,
+			Biography:   user.Biography,
+			ProfilePic:  user.ProfilePic,
+			Points:      user.Points,
+			DateCreated: user.DateCreated,
+		}
+	}
 	userJson, _ := json.Marshal(user)
 	var privateUser PrivateUser
 	json.Unmarshal(userJson, &privateUser)
