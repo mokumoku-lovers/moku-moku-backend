@@ -2,7 +2,14 @@ package users
 
 import "encoding/json"
 
-//TODO: PublicUser type
+type PublicUser struct {
+	Id          int64  `json:"id"`
+	DisplayName string `json:"display_name"`
+	Biography   string `json:"biography"`
+	ProfilePic  string `json:"profile_picture"`
+	Points      int32  `json:"points"`
+	DateCreated string `json:"date_created"`
+}
 
 type PrivateUser struct {
 	Id          int64  `json:"id"`
