@@ -118,6 +118,33 @@ func UpdateUserPoints(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-
+  
+  
 	c.JSON(http.StatusOK, updatedUser.Marshall(c.GetHeader("X-Public") == "true"))
+}
+
+func UpdateUserPassword(c *gin.Context) {
+	//Parse userId
+	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
+	if userErr != nil {
+		err := errors.BadRequest("user id should be a number")
+		c.JSON(err.Status, err)
+		return
+	}
+	//Parse JSON and map it to User model
+	var user users.User
+	if err := c.ShouldBind(&user); err != nil {
+		restErr := errors.BadRequest("invalid json body")
+		c.JSON(http.StatusBadRequest, restErr)
+		return
+	}
+	user.Id = userId
+
+	//Update password
+	updatedPassword, err := services.UpdatePassword(user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, updatedPassword)
 }

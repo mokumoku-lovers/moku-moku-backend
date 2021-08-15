@@ -11,4 +11,5 @@ func addRoutes() {
 	router.PUT("/users/:user_id", users.UpdateUser)
 	router.PATCH("/users/:user_id", users.UpdateUser)
 	router.PATCH("/users/:user_id/points/:user_points", users.UpdateUserPoints)
+	router.PATCH("/users/:user_id/change_password", users.UpdateUserPassword)
 }
