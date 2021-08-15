@@ -25,14 +25,10 @@ type PrivateUser struct {
 
 func (user *User) Marshall(isPublic bool) interface{} {
 	if isPublic {
-		return PublicUser{
-			Id:          user.Id,
-			DisplayName: user.DisplayName,
-			Biography:   user.Biography,
-			ProfilePic:  user.ProfilePic,
-			Points:      user.Points,
-			DateCreated: user.DateCreated,
-		}
+		userJson, _ := json.Marshal(user)
+		var publicUser PublicUser
+		json.Unmarshal(userJson, &publicUser)
+		return publicUser
 	}
 	userJson, _ := json.Marshal(user)
 	var privateUser PrivateUser
