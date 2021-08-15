@@ -119,5 +119,5 @@ func UpdateUserPoints(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, updatedUser)
+	c.JSON(http.StatusOK, updatedUser.Marshall(c.GetHeader("X-Public") == "true"))
 }
