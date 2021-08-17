@@ -1,0 +1,13 @@
+consumes:
+  - application/json
+definitions: {} #define data structures in API
+info:
+  description: Flash cards learning platform Users API
+  title: Moku Moku Users API
+  version: 0.1.0
+paths: {} #define endpoints in API
+produces:
+  - application/json
+schemes:
+  - http
+swagger: "2.0"
