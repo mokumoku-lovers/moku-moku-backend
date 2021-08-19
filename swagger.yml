@@ -35,7 +35,16 @@ definitions:
         format: int32
       date_created:
         type: string
-
+  RestErr:
+    type: object
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+        format: int
+      error:
+        type: string
 info:
   description: Flash cards learning platform Users API
   title: Moku Moku Users API
