@@ -1,7 +1,7 @@
 consumes:
   - application/json
-definitions: {
-  user_model:
+definitions:
+  User:
     type: object
     required:
       - email
@@ -35,7 +35,7 @@ definitions: {
         format: int32
       date_created:
         type: string
-}
+
 info:
   description: Flash cards learning platform Users API
   title: Moku Moku Users API
