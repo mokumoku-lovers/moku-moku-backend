@@ -3,6 +3,11 @@ consumes:
 definitions: {
   user_model:
     type: object
+    required:
+      - email
+      - username
+      - password
+      - password_r
     properties:
       id:
         type: integer
