@@ -49,7 +49,30 @@ info:
   description: Flash cards learning platform Users API
   title: Moku Moku Users API
   version: 0.1.0
-paths: {} #define endpoints in API
+paths:
+  /users:
+    post:
+      tags: ["user"]
+      operationId: createUser
+      description: Stores a new user
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/User"
+        - name: X-Public
+          type: boolean
+          in: header
+          required: true
+      responses:
+        '200':
+          description: User created
+          schema:
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
 produces:
   - application/json
 schemes:
