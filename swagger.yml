@@ -73,6 +73,29 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/RestErr"
+  /{user_id}:
+    parameters:
+      - type: integer
+        format: int64
+        name: id
+        in: path
+        required: true 
+    get:
+      tags:
+        - user
+      operationId: getUser
+      description: Gets a user from the database
+      responses:
+        '200':
+          description: User data retrieved
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+
 produces:
   - application/json
 schemes:
