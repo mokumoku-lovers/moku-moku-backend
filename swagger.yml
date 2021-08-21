@@ -73,7 +73,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/RestErr"
-  /{user_id}:
+  /users/{user_id}:
     parameters:
       - type: integer
         format: int64
