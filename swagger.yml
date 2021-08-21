@@ -111,6 +111,20 @@ paths:
           schema: 
             $ref: "#/definitions/RestErr"
 
+  /users/{user_id}/change_password:
+    patch:
+      tags:
+        - user
+      operationId: updateUserPassword
+      description: Users can update their password
+      responses: 
+        '200':
+          description: Password successfully updated
+        default: 
+          description: Error
+          schema: 
+            $ref: "#/definitions/RestErr"
+
 produces:
   - application/json
 schemes:
