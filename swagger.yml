@@ -95,6 +95,21 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/RestErr"
+    patch:
+      tags:
+        - user
+      operationId: updateUser
+      description: Partially update a user
+      responses:
+        '200':
+          description: User updated
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema: 
+            $ref: "#/definitions/RestErr"
 
 produces:
   - application/json
