@@ -80,12 +80,7 @@ paths:
         format: int64
         name: user_id
         in: path
-        required: true 
-      - name: updated_user_data
-        in: body
         required: true
-        schema:
-          $ref: "#/definitions/User"
       - name: X-Public
         type: boolean
         in: header
@@ -108,8 +103,14 @@ paths:
     patch:
       tags:
         - user
-      operationId: updateUser
+      operationId: partialUpdateUser
       description: Partially update a user
+      parameters:
+        - name: updated_user_data
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
       responses:
         '200':
           description: User updated
