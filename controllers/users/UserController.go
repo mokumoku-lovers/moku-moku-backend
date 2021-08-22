@@ -110,7 +110,7 @@ func UpdateUserPoints(c *gin.Context) {
 	// Parse JSON and map it to User model
 	var user users.User
 	user.Id = userId
-	user.Points = int32(userPoints)
+	user.Points = userPoints
 
 	// Update user
 	updatedUser, err := services.UpdateUser(true, user)
@@ -118,8 +118,7 @@ func UpdateUserPoints(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-  
-  
+
 	c.JSON(http.StatusOK, updatedUser.Marshall(c.GetHeader("X-Public") == "true"))
 }
 
