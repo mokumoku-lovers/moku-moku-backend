@@ -77,9 +77,18 @@ paths:
     parameters:
       - type: integer
         format: int64
-        name: id
+        name: user_id
         in: path
         required: true 
+      - name: updated_user_data
+        in: body
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      - name: X-Public
+          type: boolean
+          in: header
+          required: true
     get:
       tags:
         - user
