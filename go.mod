@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/georgysavva/scany v0.2.9
 	github.com/gin-gonic/gin v1.7.2
+	github.com/go-openapi/runtime v0.19.30 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jackc/pgconn v1.10.0
 	github.com/jackc/pgx/v4 v4.13.0
