@@ -87,9 +87,9 @@ paths:
         schema:
           $ref: "#/definitions/User"
       - name: X-Public
-          type: boolean
-          in: header
-          required: true
+        type: boolean
+        in: header
+        required: true
     get:
       tags:
         - user
