@@ -56,8 +56,9 @@ paths:
       operationId: createUser
       description: Stores a new user
       parameters:
-        - name: body
+        - name: new_user_data
           in: body
+          required: true
           schema:
             $ref: "#/definitions/User"
         - name: X-Public
@@ -77,9 +78,13 @@ paths:
     parameters:
       - type: integer
         format: int64
-        name: id
+        name: user_id
         in: path
-        required: true 
+        required: true
+      - name: X-Public
+        type: boolean
+        in: header
+        required: true
     get:
       tags:
         - user
@@ -98,8 +103,14 @@ paths:
     patch:
       tags:
         - user
-      operationId: updateUser
+      operationId: partialUpdateUser
       description: Partially update a user
+      parameters:
+        - name: updated_user_data
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
       responses:
         '200':
           description: User updated
@@ -110,8 +121,54 @@ paths:
           description: Error
           schema: 
             $ref: "#/definitions/RestErr"
+    delete:
+      tags:
+        - user
+      operationId: deleteUser
+      description: Deletes a user from the database
+      responses:
+        '200':
+          description: User data deleted
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+    put:
+      tags:
+        - user
+      operationId: updateUser
+      description: Update a user
+      parameters:
+        - name: updated_user_data
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        '200':
+          description: User updated
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
 
   /users/{user_id}/change_password:
+    parameters:
+      - type: integer
+        format: int64
+        name: user_id
+        in: path
+        required: true
+      - name: password_data
+        in: body
+        required: true
+        schema:
+          $ref: "#/definitions/User"
     patch:
       tags:
         - user
@@ -123,6 +180,34 @@ paths:
         default: 
           description: Error
           schema: 
+            $ref: "#/definitions/RestErr"
+
+  /users/{user_id}/points/{user_points}:
+    parameters:
+      - type: integer
+        format: int64
+        name: user_id
+        in: path
+        required: true
+      - type: integer
+        format: int64
+        name: user_points
+        in: path
+        required: true
+    patch:
+      tags:
+        - user
+      operationId: updateUserPoints
+      description: Update user's points
+      responses:
+        '200':
+          description: Points successfully updated
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
             $ref: "#/definitions/RestErr"
 
 produces:

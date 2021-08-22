@@ -18,7 +18,7 @@ type User struct {
 	Password    string `json:"password"`
 	PasswordR   string `json:"password_r"`
 	ProfilePic  string `json:"profile_picture"`
-	Points      int32  `json:"points"`
+	Points      int64  `json:"points"`
 	DateCreated string `json:"date_created"`
 }
 
