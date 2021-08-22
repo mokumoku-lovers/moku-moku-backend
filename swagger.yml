@@ -121,6 +121,41 @@ paths:
           description: Error
           schema: 
             $ref: "#/definitions/RestErr"
+    delete:
+      tags:
+        - user
+      operationId: deleteUser
+      description: Deletes a user from the database
+      responses:
+        '200':
+          description: User data deleted
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+    put:
+      tags:
+        - user
+      operationId: updateUser
+      description: Update a user
+      parameters:
+        - name: updated_user_data
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        '200':
+          description: User updated
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
 
   /users/{user_id}/change_password:
     parameters:
