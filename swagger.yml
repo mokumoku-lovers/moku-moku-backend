@@ -1,0 +1,218 @@
+consumes:
+  - application/json
+definitions:
+  User:
+    type: object
+    required:
+      - email
+      - username
+      - password
+      - password_r
+    properties:
+      id:
+        type: integer
+        format: int64
+      email:
+        type: string
+      username:
+        type: string
+      display_name:
+        type: string
+      biography:
+        type: string
+      birthday:
+        type: string
+      old_password:
+        type: string
+      password:
+        type: string
+      password_r:
+        type: string
+      profile_picture:
+        type: string
+      points:
+        type: integer
+        format: int32
+      date_created:
+        type: string
+  RestErr:
+    type: object
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+        format: int
+      error:
+        type: string
+info:
+  description: Flash cards learning platform Users API
+  title: Moku Moku Users API
+  version: 0.1.0
+paths:
+  /users:
+    post:
+      tags: ["user"]
+      operationId: createUser
+      description: Stores a new user
+      parameters:
+        - name: new_user_data
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+        - name: X-Public
+          type: boolean
+          in: header
+          required: true
+      responses:
+        '200':
+          description: User created
+          schema:
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+  /users/{user_id}:
+    parameters:
+      - type: integer
+        format: int64
+        name: user_id
+        in: path
+        required: true
+      - name: X-Public
+        type: boolean
+        in: header
+        required: true
+    get:
+      tags:
+        - user
+      operationId: getUser
+      description: Gets a user from the database
+      responses:
+        '200':
+          description: User data retrieved
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+    patch:
+      tags:
+        - user
+      operationId: partialUpdateUser
+      description: Partially update a user
+      parameters:
+        - name: updated_user_data
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        '200':
+          description: User updated
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema: 
+            $ref: "#/definitions/RestErr"
+    delete:
+      tags:
+        - user
+      operationId: deleteUser
+      description: Deletes a user from the database
+      responses:
+        '200':
+          description: User data deleted
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+    put:
+      tags:
+        - user
+      operationId: updateUser
+      description: Update a user
+      parameters:
+        - name: updated_user_data
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        '200':
+          description: User updated
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+
+  /users/{user_id}/change_password:
+    parameters:
+      - type: integer
+        format: int64
+        name: user_id
+        in: path
+        required: true
+      - name: password_data
+        in: body
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+    patch:
+      tags:
+        - user
+      operationId: updateUserPassword
+      description: Users can update their password
+      responses: 
+        '200':
+          description: Password successfully updated
+        default: 
+          description: Error
+          schema: 
+            $ref: "#/definitions/RestErr"
+
+  /users/{user_id}/points/{user_points}:
+    parameters:
+      - type: integer
+        format: int64
+        name: user_id
+        in: path
+        required: true
+      - type: integer
+        format: int64
+        name: user_points
+        in: path
+        required: true
+    patch:
+      tags:
+        - user
+      operationId: updateUserPoints
+      description: Update user's points
+      responses:
+        '200':
+          description: Points successfully updated
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+
+produces:
+  - application/json
+schemes:
+  - http
+  - https
+swagger: "2.0"
