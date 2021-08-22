@@ -56,8 +56,9 @@ paths:
       operationId: createUser
       description: Stores a new user
       parameters:
-        - name: body
+        - name: new_user_data
           in: body
+          required: true
           schema:
             $ref: "#/definitions/User"
         - name: X-Public
