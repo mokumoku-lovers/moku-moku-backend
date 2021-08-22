@@ -112,6 +112,17 @@ paths:
             $ref: "#/definitions/RestErr"
 
   /users/{user_id}/change_password:
+    parameters:
+      - type: integer
+        format: int64
+        name: user_id
+        in: path
+        required: true
+      - name: password_data
+        in: body
+        required: true
+        schema:
+          $ref: "#/definitions/User"
     patch:
       tags:
         - user
