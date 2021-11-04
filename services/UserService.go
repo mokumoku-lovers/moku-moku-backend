@@ -113,3 +113,15 @@ func UpdatePassword(user users.User) (*users.User, *errors.RestErr) {
 
 	return current, nil
 }
+
+func LoginUser(request users.UserLoginRequest) (*users.User, *errors.RestErr) {
+	dao := &users.User{
+		Email:    request.Email,
+		Password: request.Password,
+	}
+
+	if err := dao.GetUserByEmailAndPassword(); err != nil {
+		return nil, err
+	}
+	return dao, nil
+}
