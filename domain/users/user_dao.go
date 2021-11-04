@@ -4,8 +4,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx/v4"
 	"moku-moku/datasources/postgresql/users_db"
 	"moku-moku/utils/date_utils"
 	"moku-moku/utils/errors"
