@@ -149,3 +149,17 @@ func (current *User) UpdatePassword(oldPassword string, newPassword string) *err
 	}
 	return nil
 }
+
+func (user *User) GetUserByEmailAndPassword() *errors.RestErr {
+	var users []*User
+	// Encrypts the password with SHA256
+	hashedPassword := sha256.Sum256([]byte(user.Password))
+	user.Password = hex.EncodeToString(hashedPassword[:])
+
+	err := pgxscan.Select(context.Background(), users_db.Client, &users, queryGetUserByEmailAndPassword, user.Email, user.Password)
+	if err != nil {
+		return pg_utils.ParseError(err, "error when trying to get user by email and password")
+	}
+	*user = *users[0]
+	return nil
+}
