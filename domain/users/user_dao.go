@@ -34,6 +34,9 @@ func (user *User) Get() *errors.RestErr {
 	if err != nil {
 		return pg_utils.ParseError(err, "error when trying to get user")
 	}
+	if users == nil {
+		return errors.NotFoundError("user doesn't exist")
+	}
 	*user = *users[0]
 	return nil
 }
@@ -157,6 +160,9 @@ func (user *User) GetUserByEmailAndPassword() *errors.RestErr {
 	err := pgxscan.Select(context.Background(), users_db.Client, &users, queryGetUserByEmailAndPassword, user.Email, user.Password)
 	if err != nil {
 		return pg_utils.ParseError(err, "error when trying to get user by email and password")
+	}
+	if users == nil {
+		return errors.NotFoundError("user doesn't exist")
 	}
 	*user = *users[0]
 	return nil
