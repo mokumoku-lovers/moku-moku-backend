@@ -12,9 +12,10 @@ var (
 )
 
 func StartApp() {
-	addRoutes()
 
 	router.Use(cors.Default())
+	addRoutes()
+
 	err := router.Run(":9000")
 
 	if err != nil {
