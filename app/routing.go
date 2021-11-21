@@ -15,6 +15,7 @@ func addRoutes() {
 	router.PATCH("/users/:user_id", users.UpdateUser)
 	router.PATCH("/users/:user_id/points/:user_points", users.UpdateUserPoints)
 	router.PATCH("/users/:user_id/change_password", users.UpdateUserPassword)
+	router.POST("/users/login", users.Login)
 
 	// Swagger Documentation
 	opts := middleware.RedocOpts{SpecURL: "./swagger.yml", Title: "Moku-Moku-Users"}
