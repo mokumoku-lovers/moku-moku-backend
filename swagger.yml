@@ -3,11 +3,6 @@ consumes:
 definitions:
   User:
     type: object
-    required:
-      - email
-      - username
-      - password
-      - password_r
     properties:
       id:
         type: integer
@@ -22,19 +17,26 @@ definitions:
         type: string
       birthday:
         type: string
-      old_password:
-        type: string
-      password:
-        type: string
-      password_r:
-        type: string
       profile_picture:
         type: string
       points:
         type: integer
         format: int32
       date_created:
+        type: string 
+    allOf:
+      - $ref: '#/definitions/Passwords'
+      
+  Passwords: 
+    type: object 
+    properties:
+      old_password:
         type: string
+      password:
+        type: string
+      password_r:
+        type: string
+
   RestErr:
     type: object
     properties:
