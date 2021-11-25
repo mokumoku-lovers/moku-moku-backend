@@ -47,6 +47,26 @@ definitions:
         format: int
       error:
         type: string
+parameters:
+  X-Public:
+    name: X-Public
+    type: boolean
+    in: header
+    required: true
+  
+  user_id:
+    type: integer
+    format: int64
+    name: user_id
+    in: path
+    required: true
+
+  access_token:
+    name: access_token
+    type: integer
+    in : header
+    required: true 
+
 info:
   description: Flash cards learning platform Users API
   title: Moku Moku Users API
