@@ -219,11 +219,9 @@ paths:
 
   /users/{user_id}/points/{user_points}:
     parameters:
-      - type: integer
-        format: int64
-        name: user_id
-        in: path
-        required: true
+      - $ref: "#/parameters/user_id"
+      - $ref: "#/parameters/access_token"
+      - $ref: "#/parameters/X-Public"
       - type: integer
         format: int64
         name: user_points
