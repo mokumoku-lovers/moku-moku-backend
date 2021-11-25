@@ -82,16 +82,17 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/User"
-        - name: X-Public
-          type: boolean
-          in: header
-          required: true
+            allOf: 
+              - $ref: "#/definitions/User" 
+              - type: object
+                required:
+                - email
+                - username
+                - password
+                - password_r
       responses:
         '200':
           description: User created
-          schema:
-            $ref: "#/definitions/User"
         default:
           description: Error
           schema:
