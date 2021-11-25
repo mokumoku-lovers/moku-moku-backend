@@ -145,6 +145,18 @@ paths:
         - user
       operationId: deleteUser
       description: Deletes a user from the database
+      parameters: 
+        - name: user_passwords
+          in: body
+          required: true
+          schema:
+            allOf:
+              - $ref: "#/definitions/Passwords"
+              - type: object
+                required:
+                - password
+                - password_r
+            
       responses:
         '200':
           description: User data deleted
