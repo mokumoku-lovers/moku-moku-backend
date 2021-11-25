@@ -1,5 +1,6 @@
 consumes:
   - application/json
+
 definitions:
   User:
     type: object
@@ -47,6 +48,7 @@ definitions:
         format: int
       error:
         type: string
+
 parameters:
   X-Public:
     name: X-Public
@@ -71,6 +73,7 @@ info:
   description: Flash cards learning platform Users API
   title: Moku Moku Users API
   version: 0.1.0
+
 paths:
   /users:
     post:
@@ -97,6 +100,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/RestErr"
+
   /users/{user_id}:
     parameters:
       - $ref: "#/parameters/user_id"
@@ -245,7 +249,9 @@ paths:
 
 produces:
   - application/json
+
 schemes:
   - http
   - https
+  
 swagger: "2.0"
