@@ -191,16 +191,19 @@ paths:
 
   /users/{user_id}/change_password:
     parameters:
-      - type: integer
-        format: int64
-        name: user_id
-        in: path
-        required: true
-      - name: password_data
+      - $ref: "#/parameters/user_id"
+      - $ref: "#/parameters/access_token"
+      - name: user_passwords
         in: body
         required: true
         schema:
-          $ref: "#/definitions/User"
+          allOf:
+            - $ref: "#/definitions/Passwords"
+            - type: object
+              required:
+                - old_password
+                - password
+                - password_r
     patch:
       tags:
         - user
