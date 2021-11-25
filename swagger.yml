@@ -106,6 +106,8 @@ paths:
         - user
       operationId: getUser
       description: Gets a user from the database
+      parameters:
+        - $ref: "#/parameters/X-Public"
       responses:
         '200':
           description: User data retrieved
@@ -122,6 +124,7 @@ paths:
       operationId: partialUpdateUser
       description: Partially update a user
       parameters:
+        - $ref: "#/parameters/X-Public"
         - name: updated_user_data
           in: body
           required: true
@@ -157,6 +160,7 @@ paths:
       operationId: updateUser
       description: Update a user
       parameters:
+        - $ref: "#/parameters/X-Public"
         - name: updated_user_data
           in: body
           required: true
