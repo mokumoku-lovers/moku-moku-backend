@@ -99,15 +99,8 @@ paths:
             $ref: "#/definitions/RestErr"
   /users/{user_id}:
     parameters:
-      - type: integer
-        format: int64
-        name: user_id
-        in: path
-        required: true
-      - name: X-Public
-        type: boolean
-        in: header
-        required: true
+      - $ref: "#/parameters/user_id"
+      - $ref: "#/parameters/access_token"
     get:
       tags:
         - user
