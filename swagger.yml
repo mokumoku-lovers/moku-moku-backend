@@ -25,8 +25,9 @@ definitions:
         format: int32
       date_created:
         type: string 
-    allOf:
-      - $ref: '#/definitions/Passwords'
+      passwords:
+        type: object 
+        $ref: '#/definitions/Passwords'
       
   Passwords: 
     type: object 
