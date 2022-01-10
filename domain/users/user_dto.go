@@ -17,7 +17,7 @@ type User struct {
 	ProfilePic  string `json:"profile_picture"`
 	Points      int64  `json:"points"`
 	DateCreated string `json:"date_created"`
-	Passwords
+	Passwords   Passwords
 }
 
 type Passwords struct {
