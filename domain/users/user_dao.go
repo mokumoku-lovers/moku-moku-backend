@@ -55,17 +55,17 @@ func (user *User) Save() *errors.RestErr {
 	}
 
 	// Encrypts the password with SHA256
-	hashedPassword := sha256.Sum256([]byte(user.Password))
-	user.Password = hex.EncodeToString(hashedPassword[:])
+	hashedPassword := sha256.Sum256([]byte(user.Passwords.Password))
+	user.Passwords.Password = hex.EncodeToString(hashedPassword[:])
 
 	// TODO: Failed queries increments users ID!!
 	var stmt pgx.Row
 	if user.Birthday != "" {
 		stmt = users_db.Client.QueryRow(context.Background(), queryInsertUser,
-			user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Password, user.ProfilePic, 0, user.DateCreated)
+			user.Email, user.Username, user.DisplayName, user.Biography, user.Birthday, user.Passwords.Password, user.ProfilePic, 0, user.DateCreated)
 	} else {
 		stmt = users_db.Client.QueryRow(context.Background(), queryInsertUser,
-			user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Password, user.ProfilePic, 0, user.DateCreated)
+			user.Email, user.Username, user.DisplayName, user.Biography, nil, user.Passwords.Password, user.ProfilePic, 0, user.DateCreated)
 	}
 
 	err = stmt.Scan(&user.Id)
@@ -97,8 +97,8 @@ func (user *User) Update() *errors.RestErr {
 
 	// Encrypts the password with SHA256
 	// TODO: If password is not changed do not re-hash the hash
-	hashedPassword := sha256.Sum256([]byte(user.Password))
-	user.Password = hex.EncodeToString(hashedPassword[:])
+	hashedPassword := sha256.Sum256([]byte(user.Passwords.Password))
+	user.Passwords.Password = hex.EncodeToString(hashedPassword[:])
 
 	var stmt pgconn.CommandTag
 	var err error
@@ -125,23 +125,23 @@ func (current *User) UpdatePassword(oldPassword string, newPassword string) *err
 	oldPassword = hex.EncodeToString(hashedOldPassword[:])
 
 	//Check given old password matches current DB password
-	verifiedPassword := oldPassword == current.Password
+	verifiedPassword := oldPassword == current.Passwords.Password
 
 	if !verifiedPassword {
 		return errors.BadRequest("old password is incorrect")
 	}
 
-	current.Password = newPassword
+	current.Passwords.Password = newPassword
 
 	// Encrypts the password with SHA256
 	// TODO: If password is not changed do not re-hash the hash
-	hashedPassword := sha256.Sum256([]byte(current.Password))
-	current.Password = hex.EncodeToString(hashedPassword[:])
+	hashedPassword := sha256.Sum256([]byte(current.Passwords.Password))
+	current.Passwords.Password = hex.EncodeToString(hashedPassword[:])
 
 	var stmt pgconn.CommandTag
 	var err error
 	//update password in db
-	stmt, err = users_db.Client.Exec(context.Background(), queryUpdatePassword, current.Id, current.Password)
+	stmt, err = users_db.Client.Exec(context.Background(), queryUpdatePassword, current.Id, current.Passwords.Password)
 	if err != nil {
 		return pg_utils.ParseError(err, "error when trying to update password")
 	}
@@ -154,10 +154,10 @@ func (current *User) UpdatePassword(oldPassword string, newPassword string) *err
 func (user *User) GetUserByEmailAndPassword() *errors.RestErr {
 	var users []*User
 	// Encrypts the password with SHA256
-	hashedPassword := sha256.Sum256([]byte(user.Password))
-	user.Password = hex.EncodeToString(hashedPassword[:])
+	hashedPassword := sha256.Sum256([]byte(user.Passwords.Password))
+	user.Passwords.Password = hex.EncodeToString(hashedPassword[:])
 
-	err := pgxscan.Select(context.Background(), users_db.Client, &users, queryGetUserByEmailAndPassword, user.Email, user.Password)
+	err := pgxscan.Select(context.Background(), users_db.Client, &users, queryGetUserByEmailAndPassword, user.Email, user.Passwords.Password)
 	if err != nil {
 		return pg_utils.ParseError(err, "error when trying to get user by email and password")
 	}
