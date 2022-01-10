@@ -48,13 +48,13 @@ func (user *User) EmailValidation() *errors.RestErr {
 
 func (user *User) PasswordValidation() *errors.RestErr {
 
-	if user.Password == "" || user.PasswordR == "" {
+	if user.Passwords.Password == "" || user.Passwords.PasswordR == "" {
 		return errors.BadRequest("invalid password")
 	}
 
 	// Go regexp doesn't support Lookaround backtrack
 	number, upper, special, space := false, false, false, false
-	for _, c := range user.Password {
+	for _, c := range user.Passwords.Password {
 		switch {
 		case unicode.IsNumber(c):
 			number = true
@@ -76,11 +76,11 @@ func (user *User) PasswordValidation() *errors.RestErr {
 	*	At least one special character
 	*	Minimum eight in length
 	 */
-	if !number || !upper || !special || len(user.Password) < 8 || space {
+	if !number || !upper || !special || len(user.Passwords.Password) < 8 || space {
 		return errors.BadRequest("invalid password")
 	}
 
-	if user.Password != user.PasswordR {
+	if user.Passwords.Password != user.Passwords.PasswordR {
 		return errors.BadRequest("passwords do not match")
 	}
 
