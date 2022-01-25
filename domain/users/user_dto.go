@@ -8,18 +8,22 @@ import (
 )
 
 type User struct {
-	Id          int64  `json:"id"`
-	Email       string `json:"email"`
-	Username    string `json:"username"`
-	DisplayName string `json:"display_name"`
-	Biography   string `json:"biography"`
-	Birthday    string `json:"birthday"`
+	Id          int64     `json:"id"`
+	Email       string    `json:"email"`
+	Username    string    `json:"username"`
+	DisplayName string    `json:"display_name"`
+	Biography   string    `json:"biography"`
+	Birthday    string    `json:"birthday"`
+	ProfilePic  string    `json:"profile_picture"`
+	Points      int64     `json:"points"`
+	DateCreated string    `json:"date_created"`
+	Passwords   Passwords `json:"passwords"`
+}
+
+type Passwords struct {
 	OldPassword string `json:"old_password"`
 	Password    string `json:"password"`
 	PasswordR   string `json:"password_r"`
-	ProfilePic  string `json:"profile_picture"`
-	Points      int64  `json:"points"`
-	DateCreated string `json:"date_created"`
 }
 
 func (user *User) EmailValidation() *errors.RestErr {
@@ -44,13 +48,13 @@ func (user *User) EmailValidation() *errors.RestErr {
 
 func (user *User) PasswordValidation() *errors.RestErr {
 
-	if user.Password == "" || user.PasswordR == "" {
+	if user.Passwords.Password == "" || user.Passwords.PasswordR == "" {
 		return errors.BadRequest("invalid password")
 	}
 
 	// Go regexp doesn't support Lookaround backtrack
 	number, upper, special, space := false, false, false, false
-	for _, c := range user.Password {
+	for _, c := range user.Passwords.Password {
 		switch {
 		case unicode.IsNumber(c):
 			number = true
@@ -72,11 +76,11 @@ func (user *User) PasswordValidation() *errors.RestErr {
 	*	At least one special character
 	*	Minimum eight in length
 	 */
-	if !number || !upper || !special || len(user.Password) < 8 || space {
+	if !number || !upper || !special || len(user.Passwords.Password) < 8 || space {
 		return errors.BadRequest("invalid password")
 	}
 
-	if user.Password != user.PasswordR {
+	if user.Passwords.Password != user.Passwords.PasswordR {
 		return errors.BadRequest("passwords do not match")
 	}
 
