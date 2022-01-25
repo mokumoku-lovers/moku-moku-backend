@@ -73,7 +73,7 @@ parameters:
 info:
   description: Flash cards learning platform Users API
   title: Moku Moku Users API
-  version: 0.1.0
+  version: 1.0.0
 
 paths:
   /users:
