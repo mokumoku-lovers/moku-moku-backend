@@ -104,8 +104,8 @@ func UpdatePassword(user users.User) (*users.User, *errors.RestErr) {
 		return nil, err
 	}
 
-	oldPassword := user.OldPassword
-	newPassword := user.Password
+	oldPassword := user.Passwords.OldPassword
+	newPassword := user.Passwords.Password
 
 	if err := current.UpdatePassword(oldPassword, newPassword); err != nil {
 		return nil, err
@@ -116,8 +116,10 @@ func UpdatePassword(user users.User) (*users.User, *errors.RestErr) {
 
 func LoginUser(request users.UserLoginRequest) (*users.User, *errors.RestErr) {
 	dao := &users.User{
-		Email:    request.Email,
-		Password: request.Password,
+		Email: request.Email,
+		Passwords: users.Passwords{
+			Password: request.Password,
+		},
 	}
 
 	if err := dao.GetUserByEmailAndPassword(); err != nil {
