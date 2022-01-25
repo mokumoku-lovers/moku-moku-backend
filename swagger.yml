@@ -1,13 +1,9 @@
 consumes:
   - application/json
+
 definitions:
   User:
     type: object
-    required:
-      - email
-      - username
-      - password
-      - password_r
     properties:
       id:
         type: integer
@@ -22,19 +18,27 @@ definitions:
         type: string
       birthday:
         type: string
-      old_password:
-        type: string
-      password:
-        type: string
-      password_r:
-        type: string
       profile_picture:
         type: string
       points:
         type: integer
         format: int32
       date_created:
+        type: string 
+      passwords:
+        type: object 
+        $ref: '#/definitions/Passwords'
+      
+  Passwords: 
+    type: object 
+    properties:
+      old_password:
         type: string
+      password:
+        type: string
+      password_r:
+        type: string
+
   RestErr:
     type: object
     properties:
@@ -45,10 +49,32 @@ definitions:
         format: int
       error:
         type: string
+
+parameters:
+  X-Public:
+    name: X-Public
+    type: boolean
+    in: header
+    required: true
+  
+  user_id:
+    type: integer
+    format: int64
+    name: user_id
+    in: path
+    required: true
+
+  access_token:
+    name: access_token
+    type: integer
+    in : header
+    required: true 
+
 info:
   description: Flash cards learning platform Users API
   title: Moku Moku Users API
   version: 0.1.0
+
 paths:
   /users:
     post:
@@ -60,36 +86,33 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/User"
-        - name: X-Public
-          type: boolean
-          in: header
-          required: true
+            allOf: 
+              - $ref: "#/definitions/User" 
+              - type: object
+                required:
+                - email
+                - username
+                - password
+                - password_r
       responses:
         '200':
           description: User created
-          schema:
-            $ref: "#/definitions/User"
         default:
           description: Error
           schema:
             $ref: "#/definitions/RestErr"
+
   /users/{user_id}:
     parameters:
-      - type: integer
-        format: int64
-        name: user_id
-        in: path
-        required: true
-      - name: X-Public
-        type: boolean
-        in: header
-        required: true
+      - $ref: "#/parameters/user_id"
+      - $ref: "#/parameters/access_token"
     get:
       tags:
         - user
       operationId: getUser
       description: Gets a user from the database
+      parameters:
+        - $ref: "#/parameters/X-Public"
       responses:
         '200':
           description: User data retrieved
@@ -106,6 +129,7 @@ paths:
       operationId: partialUpdateUser
       description: Partially update a user
       parameters:
+        - $ref: "#/parameters/X-Public"
         - name: updated_user_data
           in: body
           required: true
@@ -126,6 +150,18 @@ paths:
         - user
       operationId: deleteUser
       description: Deletes a user from the database
+      parameters: 
+        - name: user_passwords
+          in: body
+          required: true
+          schema:
+            allOf:
+              - $ref: "#/definitions/Passwords"
+              - type: object
+                required:
+                - password
+                - password_r
+            
       responses:
         '200':
           description: User data deleted
@@ -141,6 +177,7 @@ paths:
       operationId: updateUser
       description: Update a user
       parameters:
+        - $ref: "#/parameters/X-Public"
         - name: updated_user_data
           in: body
           required: true
@@ -159,16 +196,19 @@ paths:
 
   /users/{user_id}/change_password:
     parameters:
-      - type: integer
-        format: int64
-        name: user_id
-        in: path
-        required: true
-      - name: password_data
+      - $ref: "#/parameters/user_id"
+      - $ref: "#/parameters/access_token"
+      - name: user_passwords
         in: body
         required: true
         schema:
-          $ref: "#/definitions/User"
+          allOf:
+            - $ref: "#/definitions/Passwords"
+            - type: object
+              required:
+                - old_password
+                - password
+                - password_r
     patch:
       tags:
         - user
@@ -184,11 +224,9 @@ paths:
 
   /users/{user_id}/points/{user_points}:
     parameters:
-      - type: integer
-        format: int64
-        name: user_id
-        in: path
-        required: true
+      - $ref: "#/parameters/user_id"
+      - $ref: "#/parameters/access_token"
+      - $ref: "#/parameters/X-Public"
       - type: integer
         format: int64
         name: user_points
@@ -212,7 +250,9 @@ paths:
 
 produces:
   - application/json
+
 schemes:
   - http
   - https
+  
 swagger: "2.0"

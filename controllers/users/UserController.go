@@ -130,14 +130,17 @@ func UpdateUserPassword(c *gin.Context) {
 		c.JSON(err.Status, err)
 		return
 	}
-	//Parse JSON and map it to User model
-	var user users.User
-	if err := c.ShouldBind(&user); err != nil {
+	//Parse JSON and map it to Passwords model
+	var passwords users.Passwords
+	if err := c.ShouldBind(&passwords); err != nil {
 		restErr := errors.BadRequest("invalid json body")
 		c.JSON(http.StatusBadRequest, restErr)
 		return
 	}
+
+	var user users.User
 	user.Id = userId
+	user.Passwords = passwords
 
 	//Update password
 	_, err := services.UpdatePassword(user)
@@ -146,4 +149,19 @@ func UpdateUserPassword(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, "password successfully changed")
+}
+
+func Login(c *gin.Context) {
+	var request users.UserLoginRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		restErr := errors.BadRequest("invalid json body")
+		c.JSON(http.StatusBadRequest, restErr)
+		return
+	}
+	user, err := services.LoginUser(request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, user.Marshall(c.GetHeader("X-Public") == "true"))
 }
