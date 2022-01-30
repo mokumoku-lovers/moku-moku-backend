@@ -1,6 +1,8 @@
 package users
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"moku-moku/utils/errors"
 	"regexp"
 	"strings"
@@ -24,6 +26,28 @@ type Passwords struct {
 	OldPassword string `json:"old_password"`
 	Password    string `json:"password"`
 	PasswordR   string `json:"password_r"`
+}
+
+// IsUserPassword validates the password from the request body with
+// the stored user password
+func (p *Passwords) IsUserPassword(userID int64) *errors.RestErr {
+	// Get userID's password
+	var password string
+	var err *errors.RestErr
+	if password, err = p.GetUserPassword(userID); err != nil {
+		return err
+	}
+
+	// Encrypts the password with SHA256
+	hashedPassword := sha256.Sum256([]byte(p.OldPassword))
+	providedPassword := hex.EncodeToString(hashedPassword[:])
+
+	// Check if the retrieved password is the same as the one provided in the request
+	if equal := password != providedPassword; equal {
+		return errors.BadRequest("invalid passwords")
+	}
+
+	return nil
 }
 
 func (user *User) EmailValidation() *errors.RestErr {

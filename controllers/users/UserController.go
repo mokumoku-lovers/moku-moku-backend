@@ -53,6 +53,23 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(err.Status, err)
 		return
 	}
+
+	var passwords users.Passwords
+
+	// Parse JSON and map it to Password model
+	if err := c.ShouldBindJSON(&passwords); err != nil {
+		resErr := errors.BadRequest("invalid json body")
+		c.JSON(http.StatusBadRequest, resErr)
+		return
+	}
+	// Check if it's user's password, only that user has right to delete
+	// her/his own user
+	if err := passwords.IsUserPassword(userId); err != nil {
+		resErr := errors.BadRequest("invalid json body")
+		c.JSON(http.StatusBadRequest, resErr)
+		return
+	}
+
 	if err := services.DeleteUser(userId); err != nil {
 		c.JSON(err.Status, err)
 		return
