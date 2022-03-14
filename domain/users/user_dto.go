@@ -110,3 +110,10 @@ func (user *User) PasswordValidation() *errors.RestErr {
 
 	return nil
 }
+
+func (user *User) UsernameValidation() *errors.RestErr {
+	if len(user.Username) > 50 {
+		return errors.BadRequest("username cannot be longer than 50 characters")
+	}
+	return nil
+}
