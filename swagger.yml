@@ -3,6 +3,13 @@ consumes:
 
 definitions:
   User:
+    $ref: "#/definitions/MaskedUser"
+    properties:
+      passwords:
+        type: object 
+        $ref: '#/definitions/Passwords'
+  
+  MaskedUser:
     type: object
     properties:
       id:
@@ -24,11 +31,8 @@ definitions:
         type: integer
         format: int32
       date_created:
-        type: string 
-      passwords:
-        type: object 
-        $ref: '#/definitions/Passwords'
-      
+        type: string
+
   Passwords: 
     type: object 
     properties:
