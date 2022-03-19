@@ -3,6 +3,13 @@ consumes:
 
 definitions:
   User:
+    $ref: "#/definitions/MaskedUser"
+    properties:
+      passwords:
+        type: object 
+        $ref: '#/definitions/Passwords'
+  
+  MaskedUser:
     type: object
     properties:
       id:
@@ -24,11 +31,8 @@ definitions:
         type: integer
         format: int32
       date_created:
-        type: string 
-      passwords:
-        type: object 
-        $ref: '#/definitions/Passwords'
-      
+        type: string
+
   Passwords: 
     type: object 
     properties:
@@ -86,17 +90,17 @@ paths:
           in: body
           required: true
           schema:
-            allOf: 
-              - $ref: "#/definitions/User" 
-              - type: object
-                required:
-                - email
-                - username
-                - password
-                - password_r
+            $ref: "#/definitions/User" 
+            required:
+              - email
+              - username
+              - password
+              - password_r
       responses:
         '200':
           description: User created
+          schema:
+            $ref: "#/definitions/MaskedUser"
         default:
           description: Error
           schema:
@@ -117,8 +121,7 @@ paths:
         '200':
           description: User data retrieved
           schema:
-            type: object
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/MaskedUser"
         default:
           description: Error
           schema:
@@ -134,13 +137,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/MaskedUser"
       responses:
         '200':
           description: User updated
           schema:
-            type: object
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/MaskedUser"
         default:
           description: Error
           schema: 
@@ -155,12 +157,12 @@ paths:
           in: body
           required: true
           schema:
-            allOf:
-              - $ref: "#/definitions/Passwords"
-              - type: object
-                required:
-                - password
-                - password_r
+            type: object
+            properties:
+              password:
+                type: string
+              passwordr:
+                type: string
             
       responses:
         '200':
@@ -187,8 +189,7 @@ paths:
         '200':
           description: User updated
           schema:
-            type: object
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/MaskedUser"
         default:
           description: Error
           schema:
@@ -202,13 +203,8 @@ paths:
         in: body
         required: true
         schema:
-          allOf:
-            - $ref: "#/definitions/Passwords"
-            - type: object
-              required:
-                - old_password
-                - password
-                - password_r
+          $ref: "#/definitions/Passwords"
+
     patch:
       tags:
         - user
@@ -241,8 +237,7 @@ paths:
         '200':
           description: Points successfully updated
           schema:
-            type: object
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/MaskedUser"
         default:
           description: Error
           schema:
