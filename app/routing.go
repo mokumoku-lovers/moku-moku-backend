@@ -1,10 +1,11 @@
 package app
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/go-openapi/runtime/middleware"
 	"moku-moku/controllers/users"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/runtime/middleware"
 )
 
 func addRoutes() {
@@ -15,6 +16,7 @@ func addRoutes() {
 	router.PATCH("/users/:user_id", users.UpdateUser)
 	router.PATCH("/users/:user_id/points/:user_points", users.UpdateUserPoints)
 	router.PATCH("/users/:user_id/change_password", users.UpdateUserPassword)
+	router.PATCH("users/:user_id/upload_profile_pic", users.UploadUserProfilePic)
 	router.POST("/users/login", users.Login)
 
 	// Swagger Documentation
