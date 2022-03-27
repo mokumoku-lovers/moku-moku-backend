@@ -184,7 +184,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/User"
+            $ref: "#/definitions/MaskedUser"
       responses:
         '200':
           description: User updated
@@ -235,6 +235,8 @@ paths:
       responses: 
         '200':
           description: Password successfully updated
+          schema:
+            type: string
         default: 
           description: Error
           schema: 
