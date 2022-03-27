@@ -194,7 +194,29 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/RestErr"
-
+  /users/{user_id}/upload_profile_pic:
+    parameters:
+      - $ref: "#/parameters/user_id"
+      - $ref: "#/parameters/access_token"
+    post: 
+      tags:
+        - user
+      operationId: UploadUserProfilePic
+      description: Uploads a user's profile picture 
+      parameters:
+        - name: file
+          in: formData
+          required: true
+          type: file
+      responses:
+        '200':
+          description: User profile picture uploaded
+          schema: 
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
   /users/{user_id}/change_password:
     parameters:
       - $ref: "#/parameters/user_id"
