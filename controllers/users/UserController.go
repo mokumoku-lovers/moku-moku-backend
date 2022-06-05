@@ -15,6 +15,11 @@ import (
 )
 
 func GetUser(c *gin.Context) {
+	authErr := oauth.AuthenticateRequest(c.Request)
+	if authErr != nil {
+		c.JSON(authErr.Status, authErr)
+		return
+	}
 	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if userErr != nil {
 		err := errors.BadRequest("user id should be a number")
@@ -30,6 +35,12 @@ func GetUser(c *gin.Context) {
 }
 
 func CreateUser(c *gin.Context) {
+	authErr := oauth.AuthenticateRequest(c.Request)
+	if authErr != nil {
+		c.JSON(authErr.Status, authErr)
+		return
+	}
+
 	var user users.User
 
 	// Parse JSON and map it to User model
@@ -51,6 +62,12 @@ func CreateUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
+	authErr := oauth.AuthenticateRequest(c.Request)
+	if authErr != nil {
+		c.JSON(authErr.Status, authErr)
+		return
+	}
+
 	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if userErr != nil {
 		err := errors.BadRequest("user id should be a number")
@@ -82,6 +99,12 @@ func DeleteUser(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
+	authErr := oauth.AuthenticateRequest(c.Request)
+	if authErr != nil {
+		c.JSON(authErr.Status, authErr)
+		return
+	}
+
 	// Parse userId
 	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if userErr != nil {
@@ -114,6 +137,12 @@ func UpdateUser(c *gin.Context) {
 }
 
 func UpdateUserPoints(c *gin.Context) {
+	authErr := oauth.AuthenticateRequest(c.Request)
+	if authErr != nil {
+		c.JSON(authErr.Status, authErr)
+		return
+	}
+
 	// Parse userId & userPoints
 	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if userErr != nil {
@@ -144,6 +173,11 @@ func UpdateUserPoints(c *gin.Context) {
 }
 
 func UpdateUserPassword(c *gin.Context) {
+	authErr := oauth.AuthenticateRequest(c.Request)
+	if authErr != nil {
+		c.JSON(authErr.Status, authErr)
+		return
+	}
 	//Parse userId
 	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if userErr != nil {
@@ -173,6 +207,11 @@ func UpdateUserPassword(c *gin.Context) {
 }
 
 func UploadUserProfilePic(c *gin.Context) {
+	authErr := oauth.AuthenticateRequest(c.Request)
+	if authErr != nil {
+		c.JSON(authErr.Status, authErr)
+		return
+	}
 
 	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if userErr != nil {
