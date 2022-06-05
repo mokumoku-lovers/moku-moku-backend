@@ -11,6 +11,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mokumoku-lovers/moku-moku-oauth-go/oauth"
 )
 
 func GetUser(c *gin.Context) {
