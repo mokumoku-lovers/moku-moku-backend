@@ -28,6 +28,17 @@ const (
 	queryGetUserByEmailAndPassword = "SELECT id, username, display_name, biography, COALESCE(to_char(birthday, 'YYYY-MM-DD'), '') AS birthday, profile_pic, points, to_char(date_created, 'YYYY-MM-DD') AS date_created FROM user_db.users WHERE email=$1 AND password=$2;"
 )
 
+// GetUserPassword retrieves userID's password
+func (p *Passwords) GetUserPassword(userID int64) (string, *errors.RestErr) {
+	// Get user password
+	var userPass = ""
+	if err := pgxscan.Get(context.Background(), users_db.Client, &userPass, queryGetUserPassword, userID); err != nil {
+		return "", pg_utils.ParseError(err, "error when trying to get user")
+	}
+
+	return userPass, nil
+}
+
 func (user *User) Get() *errors.RestErr {
 	// Get user data
 	var users []*User

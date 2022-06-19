@@ -24,6 +24,10 @@ func CreateUser(user users.User) (*users.User, *errors.RestErr) {
 		return nil, err
 	}
 
+	if err := user.UsernameValidation(); err != nil {
+		return nil, err
+	}
+
 	// DTO save user to DB
 	if err := user.Save(); err != nil {
 		return nil, err
@@ -54,7 +58,11 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 			}
 		}
 		if user.Username != "" {
-			current.Username = user.Username
+			if err := user.UsernameValidation(); err != nil {
+				return nil, err
+			} else {
+				current.Username = user.Username
+			}
 		}
 		if user.DisplayName != "" {
 			current.DisplayName = user.DisplayName
@@ -74,6 +82,9 @@ func UpdateUser(partialUpdate bool, user users.User) (*users.User, *errors.RestE
 	} else { //fullUpdate, update all to info in current user
 		// Call middleware to sanitize and check if the fields are correct
 		if err := user.EmailValidation(); err != nil {
+			return nil, err
+		}
+		if err := user.UsernameValidation(); err != nil {
 			return nil, err
 		} else {
 			current.Email = user.Email
