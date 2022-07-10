@@ -35,12 +35,6 @@ func GetUser(c *gin.Context) {
 }
 
 func CreateUser(c *gin.Context) {
-	authErr := oauth.AuthenticateRequest(c.Request)
-	if authErr != nil {
-		c.JSON(authErr.Status, authErr)
-		return
-	}
-
 	var user users.User
 
 	// Parse JSON and map it to User model
