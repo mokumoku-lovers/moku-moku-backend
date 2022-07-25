@@ -12,8 +12,10 @@ var (
 )
 
 func StartApp() {
+	corsMiddlewareConfig := cors.DefaultConfig()
+	corsMiddlewareConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "access_token"}
+	router.Use(cors.New(corsMiddlewareConfig))
 
-	router.Use(cors.Default())
 	addRoutes()
 
 	err := router.Run(":9000")
