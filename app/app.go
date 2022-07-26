@@ -14,6 +14,7 @@ var (
 func StartApp() {
 	corsMiddlewareConfig := cors.DefaultConfig()
 	corsMiddlewareConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "access_token"}
+	corsMiddlewareConfig.AllowAllOrigins = true
 	router.Use(cors.New(corsMiddlewareConfig))
 
 	addRoutes()
