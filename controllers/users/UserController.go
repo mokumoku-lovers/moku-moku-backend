@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mokumoku-lovers/moku-moku-oauth-go/oauth"
@@ -32,6 +33,33 @@ func GetUser(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, user.Marshall(c.GetHeader("X-Public") == "true"))
+}
+
+func GetAllUsers(c *gin.Context) {
+	authErr := oauth.AuthenticateRequest(c.Request)
+	if authErr != nil {
+		c.JSON(authErr.Status, authErr)
+		return
+	}
+	order := strings.ToUpper(c.Query("order"))
+	if order != "" && order != "ASC" && order != "DESC" {
+		err := errors.BadRequest("Supported values for order are: null | 'ASC' | 'DESC'")
+		c.JSON(err.Status, err)
+		return
+	}
+	userList, getErr := services.GetAllUsers(order)
+	if getErr != nil {
+		c.JSON(getErr.Status, getErr)
+		return
+	}
+
+	finalUserList := make([]interface{}, len(userList))
+
+	for i := range userList {
+		finalUserList[i] = userList[i].Marshall(c.GetHeader("X-Public") == "true")
+	}
+
+	c.JSON(http.StatusOK, finalUserList)
 }
 
 func CreateUser(c *gin.Context) {
