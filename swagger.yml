@@ -105,6 +105,30 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/RestErr"
+    get:
+      tags:
+        - user
+      operationId: getAllUsers
+      description: Gets all users from the datase. Ordering ("ASC" / "DESC") is supported for users' points property
+      parameters:
+        - in: query
+          name: order
+          description: Order the resulting users list by points ("ASC" / "DESC").
+          allowEmptyValue: true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Users list retrieved
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MaskedUser'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/RestErr"
+
 
   /users/{user_id}:
     parameters:
