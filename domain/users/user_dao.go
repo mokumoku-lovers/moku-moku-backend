@@ -61,14 +61,16 @@ func (user *User) Get() *errors.RestErr {
 	return nil
 }
 
-func GetAll(order string) ([]*User, *errors.RestErr) {
+func GetAllBy(keyword string, order string) ([]*User, *errors.RestErr) {
 	var users []*User
 	var getAllUsersQuery string
-	if order == "" {
-		getAllUsersQuery = queryGetAllUsers
-	} else {
-		getAllUsersQuery = queryGetAllUsers + " ORDER BY points " + order
+	if keyword == "" {
+		keyword = "point"
 	}
+	if strings.ToUpper(order) != "ASC" {
+		order = "DESC"
+	}
+	getAllUsersQuery = queryGetAllUsers + " ORDER BY " + keyword + " " + order
 	if err := pgxscan.Select(context.Background(), users_db.Client, &users, getAllUsersQuery); err != nil {
 		return nil, pg_utils.ParseError(err, "error when trying to get all users")
 	}
