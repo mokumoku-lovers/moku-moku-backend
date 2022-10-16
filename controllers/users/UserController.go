@@ -41,13 +41,17 @@ func GetAllUsers(c *gin.Context) {
 		c.JSON(authErr.Status, authErr)
 		return
 	}
+	by := c.Query("by")
+	if by == "" {
+		by = "point"
+	}
 	order := strings.ToUpper(c.Query("order"))
 	if order != "" && order != "ASC" && order != "DESC" {
 		err := errors.BadRequest("Supported values for order are: null | 'ASC' | 'DESC'")
 		c.JSON(err.Status, err)
 		return
 	}
-	userList, getErr := services.GetAllUsers(order)
+	userList, getErr := services.GetAllUsersBy(by, order)
 	if getErr != nil {
 		c.JSON(getErr.Status, getErr)
 		return
