@@ -109,8 +109,14 @@ paths:
       tags:
         - user
       operationId: getAllUsers
-      description: Gets all users from the datase. Ordering ("ASC" / "DESC") is supported for users' points property
+      description: Gets all users from the datase. Ordering ("ASC" / "DESC") is supported for users' designated property.
       parameters:
+        - in: query
+          name: by
+          description: Designating ordering the users list by which property.
+          allowEmptyValue: true
+          required: false
+          type: string
         - in: query
           name: order
           description: Order the resulting users list by points ("ASC" / "DESC").
