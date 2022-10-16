@@ -13,9 +13,9 @@ func GetUser(userId int64) (*users.User, *errors.RestErr) {
 	return result, nil
 }
 
-func GetAllUsers(order string) ([]*users.User, *errors.RestErr) {
+func GetAllUsersBy(keyword string, order string) ([]*users.User, *errors.RestErr) {
 	var result []*users.User
-	result, err := users.GetAll(order)
+	result, err := users.GetAllBy(keyword, order)
 
 	if err != nil {
 		return nil, err
