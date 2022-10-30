@@ -13,6 +13,17 @@ func GetUser(userId int64) (*users.User, *errors.RestErr) {
 	return result, nil
 }
 
+func GetAllUsersBy(keyword string, order string) ([]*users.User, *errors.RestErr) {
+	var result []*users.User
+	result, err := users.GetAllBy(keyword, order)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func CreateUser(user users.User) (*users.User, *errors.RestErr) {
 
 	// Call middleware to sanitize and check if the fields are correct
