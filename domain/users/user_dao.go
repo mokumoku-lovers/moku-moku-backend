@@ -65,7 +65,7 @@ func GetAllBy(keyword string, order string) ([]*User, *errors.RestErr) {
 	var users []*User
 	var getAllUsersQuery string
 	if keyword == "" {
-		keyword = "point"
+		keyword = "points"
 	}
 	if strings.ToUpper(order) != "ASC" {
 		order = "DESC"

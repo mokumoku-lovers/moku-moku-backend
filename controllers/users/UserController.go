@@ -43,7 +43,7 @@ func GetAllUsers(c *gin.Context) {
 	}
 	by := c.Query("by")
 	if by == "" {
-		by = "point"
+		by = "points"
 	}
 	order := strings.ToUpper(c.Query("order"))
 	if order != "" && order != "ASC" && order != "DESC" {
