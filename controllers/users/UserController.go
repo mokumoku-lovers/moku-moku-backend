@@ -254,7 +254,7 @@ func UploadUserProfilePic(c *gin.Context) {
 	}
 
 	fileType := file.Header.Get("Content-Type")
-	if fileType != "image/jpeg" {
+	if fileType != "image/jpeg" && fileType != "image/png" {
 		c.JSON(http.StatusBadRequest, errors.BadRequest("file must be of type image"))
 		return
 	}
