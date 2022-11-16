@@ -259,22 +259,23 @@ func UploadUserProfilePic(c *gin.Context) {
 		return
 	}
 
-	name := file.Filename
-	hashedName := sha256.Sum256([]byte(name))
+	// Split the between file name and file extension
+	name := strings.Split(file.Filename, ".")
+	hashedName := sha256.Sum256([]byte(name[0]))
 	hashedNameString := hex.EncodeToString(hashedName[:])
 
 	//map to user model
 	var user users.User
 	user.Id = userId
-	user.ProfilePic = hashedNameString
+	user.ProfilePic = hashedNameString + "." + name[1]
 
 	//write file to basePath
-	basePath := "/MokuMoku/profile_pics/"
+	basePath := "./MokuMoku/profile_pics/"
 	if _, err := os.Stat(basePath); os.IsNotExist(err) {
 		//create directory
 		os.MkdirAll(basePath, 0700)
 	}
-	saveErr := c.SaveUploadedFile(file, basePath+hashedNameString+".png")
+	saveErr := c.SaveUploadedFile(file, basePath+hashedNameString+"."+name[1])
 	if saveErr != nil {
 		c.JSON(http.StatusInternalServerError, errors.InternalServerError("file could not be saved"))
 	}
