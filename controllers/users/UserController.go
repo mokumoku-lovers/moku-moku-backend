@@ -303,3 +303,13 @@ func Login(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, user.Marshall(c.GetHeader("X-Public") == "true"))
 }
+
+func GetUSerProfilePicture(c *gin.Context) {
+	picHash := c.Param("pic_hash")
+	if picHash == "" {
+		c.JSON(http.StatusNotFound, "could not find the specified profile picture")
+		return
+	}
+	basePath := "./MokuMoku/profile_pics/"
+	c.File(basePath + picHash)
+}
