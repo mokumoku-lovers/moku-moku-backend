@@ -19,6 +19,7 @@ func addRoutes() {
 	router.PATCH("/users/:user_id/change_password", users.UpdateUserPassword)
 	router.POST("users/:user_id/upload_profile_pic", users.UploadUserProfilePic)
 	router.POST("/users/login", users.Login)
+	router.GET("/users/pics/:pic_hash", users.GetUSerProfilePicture)
 
 	// Swagger Documentation
 	opts := middleware.RedocOpts{SpecURL: "./swagger.yml", Title: "Moku-Moku-Users"}
