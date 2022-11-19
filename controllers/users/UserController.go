@@ -15,6 +15,8 @@ import (
 	"github.com/mokumoku-lovers/moku-moku-oauth-go/oauth"
 )
 
+const BASE_PATH = "./MokuMoku/profile_pics/"
+
 func GetUser(c *gin.Context) {
 	authErr := oauth.AuthenticateRequest(c.Request)
 	if authErr != nil {
@@ -270,12 +272,11 @@ func UploadUserProfilePic(c *gin.Context) {
 	user.ProfilePic = hashedNameString + "." + name[1]
 
 	//write file to basePath
-	basePath := "./MokuMoku/profile_pics/"
-	if _, err := os.Stat(basePath); os.IsNotExist(err) {
+	if _, err := os.Stat(BASE_PATH); os.IsNotExist(err) {
 		//create directory
-		os.MkdirAll(basePath, 0700)
+		os.MkdirAll(BASE_PATH, 0700)
 	}
-	saveErr := c.SaveUploadedFile(file, basePath+hashedNameString+"."+name[1])
+	saveErr := c.SaveUploadedFile(file, BASE_PATH+hashedNameString+"."+name[1])
 	if saveErr != nil {
 		c.JSON(http.StatusInternalServerError, errors.InternalServerError("file could not be saved"))
 	}
@@ -310,6 +311,5 @@ func GetUSerProfilePicture(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "could not find the specified profile picture")
 		return
 	}
-	basePath := "./MokuMoku/profile_pics/"
-	c.File(basePath + picHash)
+	c.File(BASE_PATH + picHash)
 }
