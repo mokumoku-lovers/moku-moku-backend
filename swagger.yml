@@ -247,6 +247,29 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/RestErr"
+  /users/pics/{pic_hash}:
+    parameters:
+      - in: path
+        type: string
+        format: string
+        name: pic_hash
+        required: true
+        description: The relative image path (profile_picture) from the User DTO
+      - $ref: "#/parameters/access_token"
+
+    get:
+      tags:
+        - user
+      produces:
+        - image/png
+        - image/jpeg
+      operationId: getProfilePic
+      description: Retrieve a user profile picture
+      responses:
+        '200':
+          description: Profile picture retrieved correctly
+        '404':
+          description: Profile picture not found
   /users/{user_id}/change_password:
     parameters:
       - $ref: "#/parameters/user_id"

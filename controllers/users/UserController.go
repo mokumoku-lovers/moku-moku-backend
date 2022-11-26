@@ -15,6 +15,8 @@ import (
 	"github.com/mokumoku-lovers/moku-moku-oauth-go/oauth"
 )
 
+const BASE_PATH = "./MokuMoku/profile_pics/"
+
 func GetUser(c *gin.Context) {
 	authErr := oauth.AuthenticateRequest(c.Request)
 	if authErr != nil {
@@ -254,27 +256,27 @@ func UploadUserProfilePic(c *gin.Context) {
 	}
 
 	fileType := file.Header.Get("Content-Type")
-	if fileType != "image/jpeg" {
+	if fileType != "image/jpeg" && fileType != "image/png" {
 		c.JSON(http.StatusBadRequest, errors.BadRequest("file must be of type image"))
 		return
 	}
 
-	name := file.Filename
-	hashedName := sha256.Sum256([]byte(name))
+	// Split the between file name and file extension
+	name := strings.Split(file.Filename, ".")
+	hashedName := sha256.Sum256([]byte(name[0]))
 	hashedNameString := hex.EncodeToString(hashedName[:])
 
 	//map to user model
 	var user users.User
 	user.Id = userId
-	user.ProfilePic = hashedNameString
+	user.ProfilePic = hashedNameString + "." + name[1]
 
 	//write file to basePath
-	basePath := "/MokuMoku/profile_pics/"
-	if _, err := os.Stat(basePath); os.IsNotExist(err) {
+	if _, err := os.Stat(BASE_PATH); os.IsNotExist(err) {
 		//create directory
-		os.MkdirAll(basePath, 0700)
+		os.MkdirAll(BASE_PATH, 0700)
 	}
-	saveErr := c.SaveUploadedFile(file, basePath+hashedNameString+".png")
+	saveErr := c.SaveUploadedFile(file, BASE_PATH+hashedNameString+"."+name[1])
 	if saveErr != nil {
 		c.JSON(http.StatusInternalServerError, errors.InternalServerError("file could not be saved"))
 	}
@@ -301,4 +303,13 @@ func Login(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, user.Marshall(c.GetHeader("X-Public") == "true"))
+}
+
+func GetUSerProfilePicture(c *gin.Context) {
+	picHash := c.Param("pic_hash")
+	if picHash == "" {
+		c.JSON(http.StatusNotFound, "could not find the specified profile picture")
+		return
+	}
+	c.File(BASE_PATH + picHash)
 }
