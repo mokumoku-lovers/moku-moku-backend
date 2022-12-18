@@ -18,11 +18,11 @@ import (
 const BASE_PATH = "./MokuMoku/profile_pics/"
 
 func GetUser(c *gin.Context) {
-	authErr := oauth.AuthenticateRequest(c.Request)
+	/*authErr := oauth.AuthenticateRequest(c.Request)
 	if authErr != nil {
 		c.JSON(authErr.Status, authErr)
 		return
-	}
+	}*/
 	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if userErr != nil {
 		err := errors.BadRequest("user id should be a number")
@@ -235,11 +235,11 @@ func UpdateUserPassword(c *gin.Context) {
 }
 
 func UploadUserProfilePic(c *gin.Context) {
-	authErr := oauth.AuthenticateRequest(c.Request)
+	/*authErr := oauth.AuthenticateRequest(c.Request)
 	if authErr != nil {
 		c.JSON(authErr.Status, authErr)
 		return
-	}
+	}*/
 
 	userId, userErr := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if userErr != nil {
@@ -287,7 +287,7 @@ func UploadUserProfilePic(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	c.JSON(http.StatusOK, "user profile pic uploaded")
+	c.JSON(http.StatusOK, user.ProfilePic)
 }
 
 func Login(c *gin.Context) {
