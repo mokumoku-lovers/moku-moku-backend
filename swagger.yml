@@ -267,6 +267,8 @@ paths:
       description: Retrieve a user profile picture
       responses:
         '200':
+          schema:
+            type: string
           description: Profile picture retrieved correctly
         '404':
           description: Profile picture not found
