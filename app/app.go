@@ -19,7 +19,7 @@ func StartApp() {
 
 	addRoutes()
 
-	err := router.Run(":9000")
+	err := router.RunTLS(":9000", "../../certs/cert.pem", "../../certs/key.pem")
 
 	if err != nil {
 		errMsg := fmt.Errorf("routing couldn't be set up")
